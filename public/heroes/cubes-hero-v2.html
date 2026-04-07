@@ -1,0 +1,953 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Engenium Labs — Cubes Hero v2</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300;1,400&family=JetBrains+Mono:wght@300;400&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --roman-dusk: #171210;
+        --warm-linen: #f5efe0;
+        --aged-clay: #a86040;
+        --verdigris: #507e78;
+        --roman-dusk-rgb: 23, 18, 16;
+        --warm-linen-rgb: 245, 239, 224;
+        --aged-clay-rgb: 168, 96, 64;
+        --verdigris-rgb: 80, 126, 120;
+
+        --cube-face-border: 1px solid rgba(var(--verdigris-rgb), 0.18);
+        --cube-face-bg: rgb(var(--roman-dusk-rgb));
+        --cube-face-shadow: none;
+      }
+
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        font-size: 16px;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        overflow: hidden;
+      }
+
+      body {
+        background: #0c0a08;
+        color: var(--warm-linen);
+      }
+
+      /* ═══════════════════════════════════════
+         GRAIN
+         ═══════════════════════════════════════ */
+      .grain-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 200;
+        opacity: 0.25;
+        mix-blend-mode: overlay;
+        pointer-events: none;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        background-size: 160px 160px;
+      }
+
+      /* ═══════════════════════════════════════
+         CUBES GRID — React Bits port
+         ═══════════════════════════════════════ */
+      .cubes-wrapper {
+        position: fixed;
+        inset: 0;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .cubes-scene {
+        display: grid;
+        width: 100%;
+        height: 100%;
+        column-gap: 5%;
+        row-gap: 5%;
+        perspective: 99999999px;
+        grid-auto-rows: 1fr;
+      }
+
+      .cube {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        aspect-ratio: 1 / 1;
+        transform-style: preserve-3d;
+      }
+
+      /* Invisible hover zone (from original) */
+      .cube::before {
+        content: "";
+        position: absolute;
+        top: -36px;
+        right: -36px;
+        bottom: -36px;
+        left: -36px;
+      }
+
+      .cube-face {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--cube-face-bg);
+        border: var(--cube-face-border);
+        box-shadow: var(--cube-face-shadow);
+        opacity: 1;
+      }
+
+      .cube-face--top    { transform: translateY(-50%) rotateX(90deg); }
+      .cube-face--bottom { transform: translateY(50%) rotateX(-90deg); }
+      .cube-face--left   { transform: translateX(-50%) rotateY(-90deg); }
+      .cube-face--right  { transform: translateX(50%) rotateY(90deg); }
+      .cube-face--back,
+      .cube-face--front  { transform: rotateY(-90deg) translateX(50%) rotateY(90deg); }
+
+      /* ═══════════════════════════════════════
+         TEXT OVERLAY
+         ═══════════════════════════════════════ */
+      .hero-text {
+        position: fixed;
+        inset: 0;
+        z-index: 50;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        pointer-events: none;
+        text-align: center;
+        padding: 2rem;
+      }
+
+      /* Soft radial vignette behind text — no hard card edges */
+      .hero-text::before {
+        content: "";
+        position: absolute;
+        width: 130%;
+        height: 120%;
+        background: radial-gradient(
+          ellipse at center,
+          rgba(var(--roman-dusk-rgb), 0.92) 0%,
+          rgba(var(--roman-dusk-rgb), 0.8) 18%,
+          rgba(var(--roman-dusk-rgb), 0.5) 35%,
+          rgba(var(--roman-dusk-rgb), 0.2) 50%,
+          rgba(var(--roman-dusk-rgb), 0.05) 62%,
+          rgba(var(--roman-dusk-rgb), 0) 72%
+        );
+        pointer-events: none;
+        z-index: -1;
+      }
+
+      .hero-text .eyebrow {
+        font-family: "JetBrains Mono", monospace;
+        font-weight: 300;
+        font-size: 0.6rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--verdigris);
+        opacity: 0.5;
+        margin-bottom: 1.4rem;
+        animation: fadeUp 1s ease-out 0.4s both;
+      }
+
+      .hero-text h1 {
+        font-family: "Cormorant Garamond", serif;
+        font-weight: 300;
+        font-size: clamp(2.8rem, 6.5vw, 5.5rem);
+        line-height: 1.02;
+        letter-spacing: -0.03em;
+        margin-bottom: 1.4rem;
+        animation: fadeUp 1.2s ease-out 0.7s both;
+        text-shadow:
+          0 2px 20px rgba(var(--roman-dusk-rgb), 0.9),
+          0 0 60px rgba(var(--roman-dusk-rgb), 0.6);
+      }
+
+      .hero-text h1 em {
+        font-style: italic;
+        color: var(--aged-clay);
+      }
+
+      .hero-text h1 .dim {
+        color: rgba(var(--warm-linen-rgb), 0.4);
+      }
+
+      /* Thin decorative rules flanking the headline */
+      .hero-rule {
+        width: clamp(60px, 10vw, 120px);
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(var(--verdigris-rgb), 0.25),
+          transparent
+        );
+        animation: fadeUp 1s ease-out 1s both;
+      }
+
+      .hero-text .sub {
+        font-family: "DM Sans", sans-serif;
+        font-weight: 300;
+        font-size: clamp(0.9rem, 1.4vw, 1.1rem);
+        line-height: 1.65;
+        max-width: 44ch;
+        opacity: 0.35;
+        margin-bottom: 2rem;
+        animation: fadeUp 1s ease-out 1.2s both;
+        text-shadow: 0 1px 12px rgba(var(--roman-dusk-rgb), 0.8);
+      }
+
+      .hero-text .cta-row {
+        display: flex;
+        gap: 1rem;
+        pointer-events: all;
+        flex-wrap: wrap;
+        justify-content: center;
+        animation: fadeUp 1s ease-out 1.6s both;
+      }
+
+      .cta-primary {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.8rem 2rem;
+        border: 1px solid rgba(var(--aged-clay-rgb), 0.4);
+        background: rgba(var(--roman-dusk-rgb), 0.7);
+        backdrop-filter: blur(12px);
+        color: var(--warm-linen);
+        font-family: "DM Sans", sans-serif;
+        font-weight: 400;
+        font-size: 0.85rem;
+        letter-spacing: 0.03em;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .cta-primary:hover {
+        background: rgba(var(--aged-clay-rgb), 0.15);
+        border-color: var(--aged-clay);
+      }
+
+      .cta-secondary {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.8rem 1.5rem;
+        border: none;
+        background: transparent;
+        color: rgba(var(--warm-linen-rgb), 0.3);
+        font-family: "DM Sans", sans-serif;
+        font-weight: 300;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: color 0.3s ease;
+      }
+
+      .cta-secondary:hover {
+        color: rgba(var(--warm-linen-rgb), 0.6);
+      }
+
+      /* ═══════════════════════════════════════
+         STATS ROW
+         ═══════════════════════════════════════ */
+      .stats-row {
+        position: fixed;
+        bottom: 3rem;
+        left: 0;
+        right: 0;
+        z-index: 50;
+        display: flex;
+        justify-content: center;
+        gap: clamp(2rem, 5vw, 4rem);
+        pointer-events: none;
+      }
+
+      .stat {
+        text-align: center;
+      }
+
+      .stat-value {
+        font-family: "Cormorant Garamond", serif;
+        font-weight: 600;
+        font-size: clamp(1.6rem, 3vw, 2.4rem);
+        color: var(--aged-clay);
+        line-height: 1;
+        margin-bottom: 0.3rem;
+      }
+
+      .stat-label {
+        font-family: "JetBrains Mono", monospace;
+        font-weight: 300;
+        font-size: 0.5rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        opacity: 0.25;
+      }
+
+      /* ═══════════════════════════════════════
+         NAV MARK + CORNER LABEL
+         ═══════════════════════════════════════ */
+      .nav-mark {
+        position: fixed;
+        top: 3rem;
+        left: 4vw;
+        z-index: 60;
+        font-family: "Cormorant Garamond", serif;
+        font-weight: 600;
+        font-size: 1.1rem;
+        letter-spacing: 0.04em;
+        color: var(--warm-linen);
+        opacity: 0;
+        animation: fadeUp 1s ease-out 0.2s forwards;
+      }
+
+      .nav-mark span {
+        font-weight: 300;
+        color: rgba(var(--warm-linen-rgb), 0.4);
+        margin-left: 0.3em;
+      }
+
+      .corner-label {
+        position: fixed;
+        top: 3rem;
+        right: 4vw;
+        z-index: 60;
+        font-family: "JetBrains Mono", monospace;
+        font-weight: 300;
+        font-size: 0.7rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: rgba(var(--warm-linen-rgb), 0.35);
+        opacity: 0;
+        animation: fadeUp 1s ease-out 2s forwards;
+      }
+
+      .config-label {
+        position: fixed;
+        bottom: 0.8rem;
+        left: 50%;
+        transform: translateX(-50%);
+        font-family: "JetBrains Mono", monospace;
+        font-weight: 300;
+        font-size: 0.45rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        opacity: 0.1;
+        z-index: 50;
+        white-space: nowrap;
+      }
+
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(16px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="grain-overlay"></div>
+
+    <!-- Nav mark -->
+    <div class="nav-mark">Engenium<span>Labs</span></div>
+
+    <!-- Corner label -->
+    <div class="corner-label">Generative Engine Optimization</div>
+
+    <!-- Cubes grid -->
+    <div class="cubes-wrapper">
+      <div class="cubes-scene" id="cubesScene"></div>
+    </div>
+
+    <!-- Text overlay -->
+    <div class="hero-text">
+      <div class="eyebrow">Where ingenuity meets the generative engine</div>
+      <h1>
+        In the <em>engine room</em><br />
+        <span class="dim">of the</span><br />
+        new web.
+      </h1>
+      <div class="hero-rule"></div>
+      <p class="sub">
+        Entity building. Schema markup. Answer-formatted content. E-E-A-T signals. We know what generative engines weight — that's what Labs means.
+      </p>
+      <div class="cta-row">
+        <button class="cta-primary">See the full stack</button>
+        <button class="cta-secondary">How integration works →</button>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="stat">
+        <div class="stat-value">1</div>
+        <div class="stat-label">Platform</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value">6</div>
+        <div class="stat-label">Systems integrated</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value">0</div>
+        <div class="stat-label">Gaps between them</div>
+      </div>
+    </div>
+
+    <div class="config-label">
+      React Bits Cubes &bull; gridSize 8 &bull; maxAngle 45 &bull; radius 3
+      &bull; GSAP &bull; Corner sweep &bull; Ripple on arrival
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
+    <script>
+      // ═══════════════════════════════════════
+      // LETTER GLITCH ENGINE
+      // Ported from React Bits LetterGlitch
+      // One shared rAF drives all active cubes
+      // ═══════════════════════════════════════
+      const LetterGlitch = (() => {
+        const GLITCH_SPEED = 50;
+        const SMOOTH = true;
+        const CENTER_VIGNETTE = false;
+        const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$&*()-_+=/[]{};:<>.,0123456789';
+        const GLITCH_COLORS = ['#7EC4BB', '#F5EFE0', '#5A9A92', '#D4C9B5', '#4DBAAD'];
+        const FONT_SIZE = 11;
+        const CHAR_W = 7;
+        const CHAR_H = 14;
+
+        const charArr = Array.from(CHARS);
+        const randChar = () => charArr[Math.floor(Math.random() * charArr.length)];
+        const randColor = () => GLITCH_COLORS[Math.floor(Math.random() * GLITCH_COLORS.length)];
+
+        function hexToRgb(hex) {
+          hex = hex.replace(/^#?([a-f\d])([a-f\d])([a-f\d])$/i, (m,r,g,b) => r+r+g+g+b+b);
+          const m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+          return m ? { r: parseInt(m[1],16), g: parseInt(m[2],16), b: parseInt(m[3],16) } : null;
+        }
+        function lerpColor(a, b, t) {
+          return `rgb(${Math.round(a.r+(b.r-a.r)*t)},${Math.round(a.g+(b.g-a.g)*t)},${Math.round(a.b+(b.b-a.b)*t)})`;
+        }
+
+        // Active instances tracked by cube element
+        const active = new Map();
+
+        // Fixed reference size so all faces render identical text
+        const REF_SIZE = 80;
+
+        function createInstance(frontFace) {
+          const w = REF_SIZE;
+          const h = REF_SIZE;
+          const dpr = window.devicePixelRatio || 1;
+
+          // Container
+          const wrap = document.createElement('div');
+          wrap.style.cssText = 'position:absolute;inset:0;overflow:hidden;pointer-events:none;opacity:0;';
+
+          // Canvas
+          const cvs = document.createElement('canvas');
+          cvs.width = w * dpr;
+          cvs.height = h * dpr;
+          cvs.style.cssText = `display:block;width:100%;height:100%;`;
+          const ctx = cvs.getContext('2d');
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+          wrap.appendChild(cvs);
+
+          // Center vignette
+          if (CENTER_VIGNETTE) {
+            const vig = document.createElement('div');
+            vig.style.cssText = 'position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle,rgba(0,0,0,0.7) 0%,rgba(0,0,0,0) 65%);';
+            wrap.appendChild(vig);
+          }
+
+          // Build letter grid
+          const cols = Math.ceil(w / CHAR_W);
+          const rows = Math.ceil(h / CHAR_H);
+          const letters = Array.from({ length: cols * rows }, () => ({
+            char: randChar(),
+            color: randColor(),
+            targetColor: randColor(),
+            progress: 1
+          }));
+
+          frontFace.appendChild(wrap);
+
+          return {
+            wrap, cvs, ctx, w, h, cols, rows, letters,
+            lastGlitch: Date.now()
+          };
+        }
+
+        function drawInstance(inst) {
+          const { ctx, w, h, cols, letters } = inst;
+          ctx.clearRect(0, 0, w, h);
+          ctx.font = `${FONT_SIZE}px monospace`;
+          ctx.textBaseline = 'top';
+          for (let i = 0; i < letters.length; i++) {
+            const x = (i % cols) * CHAR_W;
+            const y = Math.floor(i / cols) * CHAR_H;
+            ctx.fillStyle = letters[i].color;
+            ctx.fillText(letters[i].char, x, y);
+          }
+        }
+
+        function updateInstance(inst) {
+          const { letters } = inst;
+          const count = Math.max(1, Math.floor(letters.length * 0.08));
+          for (let i = 0; i < count; i++) {
+            const idx = Math.floor(Math.random() * letters.length);
+            const L = letters[idx];
+            L.char = randChar();
+            L.targetColor = randColor();
+            if (!SMOOTH) {
+              L.color = L.targetColor;
+              L.progress = 1;
+            } else {
+              L.progress = 0;
+            }
+          }
+        }
+
+        function smoothPass(inst) {
+          let dirty = false;
+          for (const L of inst.letters) {
+            if (L.progress < 1) {
+              L.progress = Math.min(1, L.progress + 0.07);
+              const a = hexToRgb(L.color);
+              const b = hexToRgb(L.targetColor);
+              if (a && b) { L.color = lerpColor(a, b, L.progress); dirty = true; }
+            }
+          }
+          if (dirty) drawInstance(inst);
+        }
+
+        // Shared animation loop
+        let rafId = null;
+        function tick() {
+          if (active.size === 0) { rafId = null; return; }
+          const now = Date.now();
+          for (const [, inst] of active) {
+            if (now - inst.lastGlitch >= GLITCH_SPEED) {
+              updateInstance(inst);
+              drawInstance(inst);
+              inst.lastGlitch = now;
+            }
+            if (SMOOTH) smoothPass(inst);
+          }
+          rafId = requestAnimationFrame(tick);
+        }
+
+        function startLoop() {
+          if (!rafId) rafId = requestAnimationFrame(tick);
+        }
+
+        return {
+          // Keyed by face element — supports multiple faces per cube
+          activate(face) {
+            if (active.has(face)) return;
+            const inst = createInstance(face);
+            active.set(face, inst);
+            drawInstance(inst);
+            startLoop();
+            return inst.wrap;
+          },
+          deactivate(face) {
+            const inst = active.get(face);
+            if (!inst) return;
+            active.delete(face);
+            return inst.wrap;
+          },
+          getWrap(face) {
+            const inst = active.get(face);
+            return inst ? inst.wrap : null;
+          },
+          isActive(face) { return active.has(face); }
+        };
+      })();
+    </script>
+    <script>
+      // ═══════════════════════════════════════
+      // CUBES — Ported from React Bits Cubes
+      // Uses real GSAP for tilt + ripple
+      // + LetterGlitch on ripple faces
+      // ═══════════════════════════════════════
+      (function () {
+        // --- Config (from user snippet) ---
+        const GRID_SIZE = 8;
+        const MAX_ANGLE = 45;
+        const RADIUS = 3;
+        const EASING = "power3.out";
+        const ENTER_DUR = 0.3;
+        const LEAVE_DUR = 0.6;
+        const RIPPLE_SPEED = 0.8;
+
+        // Brand colors
+        const FACE_COLOR = "rgb(23, 18, 16)"; // roman dusk, fully opaque
+        const RIPPLE_COLOR = "rgba(80, 126, 120, 0.85)"; // verdigris glow
+        const LINEN_GLOW = "0 0 28px rgba(245, 239, 224, 0.55), 0 0 12px rgba(245, 239, 224, 0.4), 0 0 4px rgba(245, 239, 224, 0.6), inset 0 0 10px rgba(245, 239, 224, 0.15)";
+        const LINEN_GLOW_DIM = "0 0 20px rgba(245, 239, 224, 0.4), 0 0 8px rgba(245, 239, 224, 0.32), 0 0 3px rgba(245, 239, 224, 0.45), inset 0 0 7px rgba(245, 239, 224, 0.1)";
+        const NO_SHADOW = "0 0 0px rgba(245, 239, 224, 0)";
+
+        const scene = document.getElementById("cubesScene");
+        if (!scene) return;
+
+        // --- Build grid ---
+        scene.style.gridTemplateColumns = `repeat(${GRID_SIZE}, 1fr)`;
+        scene.style.gridTemplateRows = `repeat(${GRID_SIZE}, 1fr)`;
+
+        const cubes = [];
+        for (let r = 0; r < GRID_SIZE; r++) {
+          for (let c = 0; c < GRID_SIZE; c++) {
+            const cube = document.createElement("div");
+            cube.className = "cube";
+            cube.dataset.row = r;
+            cube.dataset.col = c;
+
+            const faces = [
+              "top",
+              "bottom",
+              "left",
+              "right",
+              "front",
+              "back",
+            ];
+            const allFaces = [];
+            for (const f of faces) {
+              const face = document.createElement("div");
+              face.className = `cube-face cube-face--${f}`;
+              if (f === "front") cube._frontFace = face;
+              cube.appendChild(face);
+              allFaces.push(face);
+            }
+            cube._allFaces = allFaces;
+            cube._isTilted = false;
+            cube._isRippling = false;
+
+            scene.appendChild(cube);
+            cubes.push(cube);
+          }
+        }
+
+        // Track current tilt state per cube
+        const tiltState = new Map();
+        for (const cube of cubes) {
+          tiltState.set(cube, { rx: 0, ry: 0 });
+        }
+
+        // --- Helpers: activate/deactivate glitch ---
+
+        // Activate on ALL 6 faces (for tilted cubes)
+        function activateAllFacesGlitch(cube) {
+          if (cube._glitchMode === 'all') return;
+          // If front-only was active, kill it first
+          if (cube._glitchMode === 'front') deactivateGlitch(cube);
+          cube._glitchMode = 'all';
+          for (const face of cube._allFaces) {
+            const wrap = LetterGlitch.activate(face);
+            if (wrap) {
+              gsap.to(wrap, { opacity: 1, duration: ENTER_DUR * 0.6, ease: "power2.out" });
+            }
+          }
+        }
+
+        // Activate on FRONT face only (for flat cubes)
+        function activateFrontGlitch(cube) {
+          if (cube._glitchMode) return; // already has some glitch
+          cube._glitchMode = 'front';
+          const face = cube._frontFace;
+          if (!face) return;
+          const wrap = LetterGlitch.activate(face);
+          if (wrap) {
+            gsap.to(wrap, { opacity: 1, duration: ENTER_DUR * 0.6, ease: "power2.out" });
+          }
+        }
+
+        // Deactivate whatever glitch mode is active
+        function deactivateGlitch(cube, dur) {
+          if (!cube._glitchMode) return;
+          const facesToKill = cube._glitchMode === 'all' ? cube._allFaces : [cube._frontFace];
+          cube._glitchMode = null;
+          for (const face of facesToKill) {
+            if (!face) continue;
+            const wrap = LetterGlitch.getWrap(face);
+            if (wrap) {
+              gsap.to(wrap, {
+                opacity: 0,
+                duration: dur || LEAVE_DUR * 0.5,
+                ease: "power2.in",
+                onComplete() {
+                  LetterGlitch.deactivate(face);
+                  if (wrap.parentNode) wrap.parentNode.removeChild(wrap);
+                }
+              });
+            }
+          }
+        }
+
+        // --- Tilt function ---
+        function tiltAt(rowCenter, colCenter) {
+          for (const cube of cubes) {
+            const r = +cube.dataset.row;
+            const c = +cube.dataset.col;
+            const dist = Math.hypot(r - rowCenter, c - colCenter);
+
+            if (dist <= RADIUS) {
+              const pct = 1 - dist / RADIUS;
+              const angle = pct * MAX_ANGLE;
+              const wasTilted = cube._isTilted;
+              cube._isTilted = true;
+              tiltState.get(cube).rx = -angle;
+              tiltState.get(cube).ry = angle;
+              gsap.to(cube, {
+                duration: ENTER_DUR,
+                ease: EASING,
+                overwrite: true,
+                rotateX: -angle,
+                rotateY: angle,
+              });
+              // Entered tilt while rippling → upgrade to all-faces glitch
+              if (!wasTilted && cube._isRippling) {
+                activateAllFacesGlitch(cube);
+              }
+            } else {
+              const wasTilted = cube._isTilted;
+              cube._isTilted = false;
+              tiltState.get(cube).rx = 0;
+              tiltState.get(cube).ry = 0;
+              gsap.to(cube, {
+                duration: LEAVE_DUR,
+                ease: "power3.out",
+                overwrite: true,
+                rotateX: 0,
+                rotateY: 0,
+              });
+              // Left tilt while rippling → downgrade to front-only glitch
+              if (wasTilted && cube._isRippling) {
+                deactivateGlitch(cube);
+                activateFrontGlitch(cube);
+              }
+              // Left tilt, no longer rippling → just kill
+              if (wasTilted && !cube._isRippling && cube._glitchMode) {
+                deactivateGlitch(cube);
+              }
+            }
+          }
+        }
+
+        // --- Ripple function (enhanced with Warm Linen glow + LetterGlitch) ---
+        function triggerRipple(colHit, rowHit) {
+          const baseRingDelay = 0.15;
+          const baseAnimDur = 0.3;
+          const baseHold = 0.6;
+          const spreadDelay = baseRingDelay / RIPPLE_SPEED;
+          const animDuration = baseAnimDur / RIPPLE_SPEED;
+          const holdTime = baseHold / RIPPLE_SPEED;
+
+          const rings = {};
+          for (const cube of cubes) {
+            const r = +cube.dataset.row;
+            const c = +cube.dataset.col;
+            const dist = Math.hypot(r - rowHit, c - colHit);
+            const ring = Math.round(dist);
+            if (!rings[ring]) rings[ring] = [];
+            rings[ring].push(cube);
+          }
+
+          Object.keys(rings)
+            .map(Number)
+            .sort((a, b) => a - b)
+            .forEach((ring) => {
+              const delay = ring * spreadDelay;
+              const ringCubes = rings[ring];
+              const faces = ringCubes.flatMap((cube) =>
+                Array.from(cube.querySelectorAll(".cube-face")),
+              );
+
+              // --- Color ripple (eased in-out) ---
+              gsap.to(faces, {
+                backgroundColor: RIPPLE_COLOR,
+                duration: animDuration,
+                delay,
+                ease: "sine.inOut",
+              });
+              gsap.to(faces, {
+                backgroundColor: FACE_COLOR,
+                duration: animDuration,
+                delay: delay + animDuration + holdTime,
+                ease: "sine.inOut",
+              });
+
+              // --- Warm Linen box-shadow: full glow on tilted, dim on flat ---
+              ringCubes.forEach((cube) => {
+                const cubeFaces = Array.from(cube.querySelectorAll(".cube-face"));
+                gsap.delayedCall(delay, () => {
+                  const glow = cube._isTilted ? LINEN_GLOW : LINEN_GLOW_DIM;
+                  gsap.to(cubeFaces, {
+                    boxShadow: glow,
+                    duration: animDuration,
+                    ease: "sine.inOut",
+                  });
+                });
+                gsap.to(cubeFaces, {
+                  boxShadow: NO_SHADOW,
+                  duration: animDuration * 1.5,
+                  delay: delay + animDuration + holdTime,
+                  ease: "sine.inOut",
+                });
+              });
+
+              // --- LetterGlitch: tilted → all 6 faces, flat → front only ---
+              ringCubes.forEach((cube) => {
+                // Activate glitch when blue wave arrives
+                gsap.delayedCall(delay, () => {
+                  cube._isRippling = true;
+                  if (cube._isTilted) {
+                    activateAllFacesGlitch(cube);
+                  } else {
+                    activateFrontGlitch(cube);
+                  }
+                });
+
+                // Deactivate when blue fades
+                gsap.delayedCall(delay + animDuration + holdTime * 0.7, () => {
+                  cube._isRippling = false;
+                  deactivateGlitch(cube, animDuration * 1.2);
+                });
+              });
+            });
+        }
+
+        // ═══════════════════════════════════════
+        // AUTONOMOUS FOCUS — corner sweep
+        // Matches gradient-blinds-hero timing.
+        // Tilt follows the sweep continuously,
+        // ripple fires once on corner arrival.
+        // ═══════════════════════════════════════
+
+        const MARGIN = 0.18;
+        const corners = [
+          { x: MARGIN, y: MARGIN },
+          { x: 1 - MARGIN, y: MARGIN },
+          { x: 1 - MARGIN, y: 1 - MARGIN },
+          { x: MARGIN, y: 1 - MARGIN },
+        ];
+
+        const sweeps = [];
+        let sweepTotal = 0;
+
+        function buildSweeps() {
+          sweeps.length = 0;
+          sweepTotal = 0;
+          let idx = 0;
+          let dir = 1;
+          const count = 30 + Math.floor(Math.random() * 15);
+
+          for (let i = 0; i < count; i++) {
+            const from = corners[idx];
+            if (i > 0 && Math.random() < 0.3) dir = -dir;
+            idx = (idx + dir + corners.length) % corners.length;
+            const to = corners[idx];
+            const dur = 1.8 + Math.random() * 2.0;
+            sweeps.push({
+              from,
+              to,
+              dur,
+              start: sweepTotal,
+              rippled: false,
+            });
+            sweepTotal += dur;
+
+            const dwell = 0.8 + Math.random() * 0.6;
+            sweeps.push({
+              from: to,
+              to: to,
+              dur: dwell,
+              start: sweepTotal,
+              rippled: true,
+            });
+            sweepTotal += dwell;
+          }
+        }
+        buildSweeps();
+
+        function ease(t) {
+          return 0.5 - 0.5 * Math.cos(t * Math.PI);
+        }
+
+        function getSweepPos(time) {
+          let t = time % sweepTotal;
+          let lo = 0,
+            hi = sweeps.length - 1;
+          while (lo < hi) {
+            const mid = (lo + hi) >> 1;
+            if (sweeps[mid].start + sweeps[mid].dur < t) lo = mid + 1;
+            else hi = mid;
+          }
+          const s = sweeps[lo];
+          const progress = ease((t - s.start) / s.dur);
+
+          if (progress > 0.95 && !s.rippled) {
+            s.rippled = true;
+            const rippleCol = Math.round(s.to.x * (GRID_SIZE - 1));
+            const rippleRow = Math.round(s.to.y * (GRID_SIZE - 1));
+            triggerRipple(rippleCol, rippleRow);
+          }
+
+          return {
+            x: s.from.x + (s.to.x - s.from.x) * progress,
+            y: s.from.y + (s.to.y - s.from.y) * progress,
+          };
+        }
+
+        let focusCur = { x: corners[0].x, y: corners[0].y };
+        let sweepCycle = 0;
+        const t0 = performance.now();
+
+        function animate(ts) {
+          requestAnimationFrame(animate);
+
+          const elapsed = (ts - t0) * 0.001;
+          if (elapsed > sweepCycle + sweepTotal) {
+            sweepCycle += sweepTotal;
+            buildSweeps();
+          }
+
+          const pos = getSweepPos(elapsed - sweepCycle);
+
+          focusCur.x += (pos.x - focusCur.x) * 0.08;
+          focusCur.y += (pos.y - focusCur.y) * 0.08;
+
+          const colCenter = focusCur.x * (GRID_SIZE - 1);
+          const rowCenter = focusCur.y * (GRID_SIZE - 1);
+
+          tiltAt(rowCenter, colCenter);
+        }
+
+        requestAnimationFrame(animate);
+      })();
+    </script>
+  </body>
+</html>

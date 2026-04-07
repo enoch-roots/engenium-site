@@ -1,0 +1,801 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Engenium Labs — Dot Grid Hero</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300;1,400&family=JetBrains+Mono:wght@300;400&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --roman-dusk: #171210;
+        --warm-linen: #f5efe0;
+        --aged-clay: #a86040;
+        --verdigris: #507e78;
+        --roman-dusk-rgb: 23, 18, 16;
+        --warm-linen-rgb: 245, 239, 224;
+        --aged-clay-rgb: 168, 96, 64;
+        --verdigris-rgb: 80, 126, 120;
+      }
+
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        font-size: 16px;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        overflow: hidden;
+      }
+
+      body {
+        background: #0c0a08;
+        color: var(--warm-linen);
+      }
+
+      /* ═══════════════════════════════════════
+     GRAIN
+     ═══════════════════════════════════════ */
+      .grain-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 200;
+        opacity: 0.22;
+        mix-blend-mode: overlay;
+        pointer-events: none;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        background-size: 160px 160px;
+      }
+
+      /* ═══════════════════════════════════════
+     NIGHTY NIGHT BACKGROUND
+     ═══════════════════════════════════════ */
+      .bg-nighty {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        overflow: hidden;
+      }
+
+      .bg-nighty .plane {
+        position: absolute;
+        width: 200%;
+        height: 200%;
+        top: -20%;
+        left: -50%;
+        background: linear-gradient(
+          -60deg,
+          rgba(var(--verdigris-rgb), 0.12) 0%,
+          rgba(var(--roman-dusk-rgb), 0.6) 35%,
+          rgba(var(--aged-clay-rgb), 0.08) 55%,
+          rgba(var(--roman-dusk-rgb), 0.9) 100%
+        );
+        transform: perspective(800px) rotateX(55deg);
+        transform-origin: center center;
+        animation: nightDrift 18s ease-in-out infinite alternate;
+      }
+
+      .bg-nighty .horizon-glow {
+        position: absolute;
+        bottom: 40%;
+        left: 0;
+        right: 0;
+        height: 30%;
+        background: radial-gradient(
+          ellipse 120% 80% at 50% 100%,
+          rgba(var(--aged-clay-rgb), 0.06) 0%,
+          transparent 70%
+        );
+      }
+
+      @keyframes nightDrift {
+        0% {
+          transform: perspective(800px) rotateX(55deg) translateX(-2%);
+        }
+        100% {
+          transform: perspective(800px) rotateX(55deg) translateX(2%);
+        }
+      }
+
+      /* ═══════════════════════════════════════
+     DOT GRID — Canvas
+     ═══════════════════════════════════════ */
+      .grid-wrapper {
+        position: fixed;
+        inset: 0;
+        z-index: 5;
+        overflow: hidden;
+      }
+
+      #dotCanvas {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        display: block;
+        opacity: 0;
+        animation: gridFadeIn 2s ease-out 0.3s forwards;
+      }
+
+      @keyframes gridFadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      /* ═══════════════════════════════════════
+     COPY OVERLAY
+     ═══════════════════════════════════════ */
+      .copy-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 50;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        align-items: center;
+        padding: 0 6vw 8vh;
+        pointer-events: none;
+      }
+
+      .eyebrow {
+        font-family: "JetBrains Mono", monospace;
+        font-weight: 300;
+        font-size: 0.7rem;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--verdigris);
+        margin-bottom: 1.6rem;
+        opacity: 0;
+        animation: fadeUp 1s ease-out 0.4s forwards;
+      }
+
+      .headline {
+        font-family: "Cormorant Garamond", serif;
+        font-weight: 300;
+        font-size: clamp(2.6rem, 5.5vw, 5rem);
+        line-height: 1.15;
+        text-align: center;
+        letter-spacing: -0.01em;
+        max-width: 22ch;
+        margin-bottom: 1.4rem;
+        opacity: 0;
+        animation: fadeUp 1.2s ease-out 0.7s forwards;
+      }
+
+      .headline em {
+        font-style: italic;
+        color: var(--aged-clay);
+      }
+
+      .headline .verd {
+        color: var(--verdigris);
+        font-style: italic;
+      }
+
+      .subline {
+        font-family: "DM Sans", sans-serif;
+        font-weight: 300;
+        font-size: clamp(0.9rem, 1.3vw, 1.15rem);
+        line-height: 1.6;
+        text-align: center;
+        letter-spacing: 0.03em;
+        color: rgba(var(--warm-linen-rgb), 0.55);
+        max-width: 44ch;
+        opacity: 0;
+        animation: fadeUp 1s ease-out 1.2s forwards;
+      }
+
+      .cta-row {
+        display: flex;
+        gap: 1.2rem;
+        margin-top: 2.4rem;
+        opacity: 0;
+        animation: fadeUp 1s ease-out 1.6s forwards;
+        pointer-events: auto;
+      }
+
+      .cta-primary {
+        font-family: "DM Sans", sans-serif;
+        font-weight: 400;
+        font-size: 0.85rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--roman-dusk);
+        background: var(--warm-linen);
+        border: none;
+        padding: 0.75rem 2rem;
+        cursor: pointer;
+        transition:
+          background 0.3s ease,
+          color 0.3s ease;
+      }
+
+      .cta-primary:hover {
+        background: var(--aged-clay);
+        color: var(--warm-linen);
+      }
+
+      .cta-secondary {
+        font-family: "DM Sans", sans-serif;
+        font-weight: 300;
+        font-size: 0.85rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: rgba(var(--warm-linen-rgb), 0.55);
+        background: transparent;
+        border: 1px solid rgba(var(--warm-linen-rgb), 0.15);
+        padding: 0.75rem 2rem;
+        cursor: pointer;
+        transition:
+          border-color 0.3s ease,
+          color 0.3s ease;
+      }
+
+      .cta-secondary:hover {
+        border-color: var(--verdigris);
+        color: var(--verdigris);
+      }
+
+      /* ═══════════════════════════════════════
+     CORNER LABEL
+     ═══════════════════════════════════════ */
+      .corner-label {
+        position: fixed;
+        top: 3rem;
+        right: 4vw;
+        z-index: 60;
+        font-family: "JetBrains Mono", monospace;
+        font-weight: 300;
+        font-size: 0.7rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: rgba(var(--warm-linen-rgb), 0.35);
+        opacity: 0;
+        animation: fadeUp 1s ease-out 2s forwards;
+      }
+
+      /* ═══════════════════════════════════════
+     NAV MARK
+     ═══════════════════════════════════════ */
+      .nav-mark {
+        position: fixed;
+        top: 3rem;
+        left: 4vw;
+        z-index: 60;
+        font-family: "Cormorant Garamond", serif;
+        font-weight: 600;
+        font-size: 1.1rem;
+        letter-spacing: 0.04em;
+        color: var(--warm-linen);
+        opacity: 0;
+        animation: fadeUp 1s ease-out 0.2s forwards;
+      }
+
+      .nav-mark span {
+        font-weight: 300;
+        color: rgba(var(--warm-linen-rgb), 0.4);
+        margin-left: 0.3em;
+      }
+
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(16px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Background -->
+    <div class="bg-nighty">
+      <div class="plane"></div>
+      <div class="horizon-glow"></div>
+    </div>
+
+    <!-- Dot Grid Canvas -->
+    <div class="grid-wrapper">
+      <canvas id="dotCanvas"></canvas>
+    </div>
+
+    <!-- Grain -->
+    <div class="grain-overlay"></div>
+
+    <!-- Corner label -->
+    <div class="corner-label">Full-Stack Digital Systems</div>
+
+    <!-- Nav mark -->
+    <div class="nav-mark">Engenium<span>Labs</span></div>
+
+    <!-- Copy -->
+    <div class="copy-overlay">
+      <div class="eyebrow">One System · One Engine · One Team</div>
+      <h1 class="headline">
+        Everything we build is <em>engineered</em><br />to be found.
+      </h1>
+      <p class="subline">
+        Other agencies sell you a website. Or SEO. Or a CRM. We build the system where all of those become one engine — and we make that engine findable by anything that searches.
+      </p>
+      <div class="cta-row">
+        <button class="cta-primary">See the platform</button>
+        <button class="cta-secondary">How it works</button>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/InertiaPlugin.min.js"></script>
+    <script>
+      // ═══════════════════════════════════════
+      // DOT GRID — Canvas + real GSAP InertiaPlugin
+      // Ported from React Bits DotGrid component
+      // ═══════════════════════════════════════
+      (function () {
+        gsap.registerPlugin(InertiaPlugin);
+
+        const canvas = document.getElementById("dotCanvas");
+        if (!canvas) return;
+
+        // --- Config (exact params from user snippet) ---
+        const DOT_SIZE = 7;
+        const GAP = 22;
+        const BASE_COLOR = { r: 23, g: 18, b: 16 }; // #171210 Roman Dusk (branded)
+        const ACTIVE_COLOR = { r: 80, g: 126, b: 120 }; // #507E78 Verdigris (branded)
+        const PROXIMITY = 280;
+        const SHOCK_RADIUS = 700;
+        const SHOCK_STRENGTH = 5;
+        const RESISTANCE = 100;
+        const RETURN_DUR = 0.3;
+
+        const PROX_SQ = PROXIMITY * PROXIMITY;
+        const HALF_DOT = DOT_SIZE / 2;
+
+        const dpr = Math.min(2, window.devicePixelRatio || 1);
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return;
+
+        let W = 1,
+          H = 1;
+        let dots = [];
+
+        // --- Build grid ---
+        function buildGrid() {
+          const cw = canvas.parentElement.clientWidth || window.innerWidth;
+          const ch = canvas.parentElement.clientHeight || window.innerHeight;
+          W = cw;
+          H = ch;
+          canvas.width = Math.round(cw * dpr);
+          canvas.height = Math.round(ch * dpr);
+          canvas.style.width = cw + "px";
+          canvas.style.height = ch + "px";
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+          const cell = DOT_SIZE + GAP;
+          const cols = Math.floor((cw + GAP) / cell);
+          const rows = Math.floor((ch + GAP) / cell);
+          const gridW = cell * cols - GAP;
+          const gridH = cell * rows - GAP;
+          const startX = (cw - gridW) / 2 + HALF_DOT;
+          const startY = (ch - gridH) / 2 + HALF_DOT;
+
+          // Kill all running tweens before rebuilding
+          for (const dot of dots) gsap.killTweensOf(dot);
+
+          dots = [];
+          for (let y = 0; y < rows; y++) {
+            for (let x = 0; x < cols; x++) {
+              dots.push({
+                cx: startX + x * cell,
+                cy: startY + y * cell,
+                ox: 0,
+                oy: 0,
+              });
+            }
+          }
+        }
+
+        const ro = new ResizeObserver(buildGrid);
+        ro.observe(canvas.parentElement);
+        buildGrid();
+
+        // ─── Shock — real GSAP InertiaPlugin + elastic.out return ───
+
+        // Sweep hold state: spotlight waits at explosion point until all dots return
+        let sweepPaused = false;
+        let pendingReturns = 0;
+        let lastShockX = 0, lastShockY = 0;
+
+        // Glow state: radiant flash on the last 2 dots + lightning bolt
+        let glowDots = [];          // array of { cx, cy, t } — up to 2 active glows
+        const GLOW_DUR = 0.8;       // seconds for each glow to fade
+        const GLOW_RADIUS = 28;     // px — just around one dot
+        const GLOW_COLOR = { r: 245, g: 239, b: 224 }; // Warm Linen flash (bright)
+        const GLOW_TRAIL = 2;       // last 2 dots glow
+        let glowLineT = 0;          // lightning animation timer
+        let glowLineActive = false;
+        let lightningPath = [];     // pre-generated bolt points
+        let lightningFlicker = 0;   // flicker seed
+
+        // ─── Lightning bolt generator (midpoint displacement) ───
+        // Inspired by React Bits Lightning shader's fbm approach,
+        // ported to a 2D polyline via recursive subdivision.
+        function generateLightning(ax, ay, bx, by, depth, jitter) {
+          if (depth <= 0) return [{ x: ax, y: ay }, { x: bx, y: by }];
+
+          const mx = (ax + bx) / 2;
+          const my = (ay + by) / 2;
+
+          // Perpendicular offset
+          const dx = bx - ax;
+          const dy = by - ay;
+          const len = Math.sqrt(dx * dx + dy * dy);
+          const nx = -dy / len;
+          const ny = dx / len;
+          const offset = (Math.random() - 0.5) * jitter * len;
+
+          const px = mx + nx * offset;
+          const py = my + ny * offset;
+
+          const left = generateLightning(ax, ay, px, py, depth - 1, jitter * 0.65);
+          const right = generateLightning(px, py, bx, by, depth - 1, jitter * 0.65);
+
+          // Merge (skip duplicate midpoint)
+          return left.concat(right.slice(1));
+        }
+
+        function newBolt(ax, ay, bx, by) {
+          lightningPath = generateLightning(ax, ay, bx, by, 6, 0.25);
+        }
+
+        // Collect the last N dots as they land, then fire glow + release
+        let landedTrail = [];
+
+        function onDotLanded(dot) {
+          pendingReturns--;
+          landedTrail.push(dot);
+
+          // When all dots have returned, start glows on last 2
+          if (pendingReturns <= 0) {
+            const trail = landedTrail.slice(-GLOW_TRAIL);
+            glowDots = trail.map((d, i) => ({
+              cx: d.cx,
+              cy: d.cy,
+              t: -i * 0.06, // stagger: 60ms apart
+            }));
+            glowLineActive = trail.length >= 2;
+            glowLineT = 0;
+            lightningFlicker = 0;
+
+            // Generate initial lightning bolt between the 2 dots
+            if (glowLineActive) {
+              newBolt(trail[0].cx, trail[0].cy, trail[1].cx, trail[1].cy);
+            }
+
+            // Release the sweep after glow peaks
+            setTimeout(() => {
+              sweepPaused = false;
+            }, GLOW_DUR * 500);
+
+            landedTrail = [];
+          }
+        }
+
+        function applyShock(sx, sy) {
+          lastShockX = sx;
+          lastShockY = sy;
+          pendingReturns = 0;
+          sweepPaused = true;
+
+          let affected = 0;
+          for (const dot of dots) {
+            const dx = dot.cx - sx;
+            const dy = dot.cy - sy;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < SHOCK_RADIUS && dist > 0.1) {
+              affected++;
+              const falloff = Math.max(0, 1 - dist / SHOCK_RADIUS);
+              // Randomize direction + magnitude so explosion is asymmetric
+              const baseAngle = Math.atan2(dy, dx);
+              const angle = baseAngle + (Math.random() - 0.5) * 1.8;
+              const mag = SHOCK_STRENGTH * falloff * (0.5 + Math.random());
+              const pushX = Math.cos(angle) * mag;
+              const pushY = Math.sin(angle) * mag;
+
+              gsap.killTweensOf(dot);
+
+              // Phase 1: inertia coast
+              gsap.to(dot, {
+                inertia: {
+                  ox: pushX * 45,
+                  oy: pushY * 45,
+                  resistance: RESISTANCE,
+                },
+                onComplete: function () {
+                  // Phase 2: elastic return
+                  gsap.to(dot, {
+                    ox: 0,
+                    oy: 0,
+                    duration: RETURN_DUR,
+                    ease: "elastic.out(1, 0.75)",
+                    onComplete: function () {
+                      onDotLanded(dot);
+                    },
+                  });
+                },
+              });
+            }
+          }
+          pendingReturns = affected;
+
+          // Safety: if no dots affected, release immediately
+          if (affected === 0) {
+            sweepPaused = false;
+          }
+        }
+
+        // ═══════════════════════════════════════
+        // AUTONOMOUS FOCUS — corner sweep
+        // Matches gradient-blinds-hero timing:
+        // continuous corner-to-corner sweeps,
+        // sine ease-in-out, ~30% reversals,
+        // 0.08 lerp smoothing. Shock fires ONCE
+        // on arrival at each corner.
+        // ═══════════════════════════════════════
+
+        const M = 0.18; // margin from edge — pulled inward from corners
+        const corners = [
+          { x: M, y: M }, // top-left
+          { x: 1 - M, y: M }, // top-right
+          { x: 1 - M, y: 0.65 }, // bottom-right (above text)
+          { x: M, y: 0.65 }, // bottom-left (above text)
+        ];
+
+        // Build sweep segments — identical structure to blinds hero
+        const sweeps = [];
+        let sweepTotal = 0;
+
+        function buildSweeps() {
+          sweeps.length = 0;
+          sweepTotal = 0;
+          let idx = 0;
+          let dir = 1;
+          const count = 30 + Math.floor(Math.random() * 15);
+
+          for (let i = 0; i < count; i++) {
+            const from = corners[idx];
+            if (Math.random() < 0.3) dir = -dir;
+            idx = (idx + dir + corners.length) % corners.length;
+            const to = corners[idx];
+            const dur = 1.8 + Math.random() * 2.0;
+            sweeps.push({ from, to, dur, start: sweepTotal, shocked: false });
+            sweepTotal += dur;
+            // Dwell at the corner for 0.8–1.4s so the spotlight lingers
+            const dwell = 0.8 + Math.random() * 0.6;
+            sweeps.push({ from: to, to: to, dur: dwell, start: sweepTotal, shocked: true });
+            sweepTotal += dwell;
+          }
+        }
+        buildSweeps();
+
+        // Sine ease-in-out (same as blinds)
+        function ease(t) {
+          return 0.5 - 0.5 * Math.cos(t * Math.PI);
+        }
+
+        function getSweepPos(time) {
+          let t = time % sweepTotal;
+          let lo = 0,
+            hi = sweeps.length - 1;
+          while (lo < hi) {
+            const mid = (lo + hi) >> 1;
+            if (sweeps[mid].start + sweeps[mid].dur < t) lo = mid + 1;
+            else hi = mid;
+          }
+          const s = sweeps[lo];
+          const progress = ease((t - s.start) / s.dur);
+
+          // Fire ONE shock when arriving at corner (progress > 0.95)
+          if (progress > 0.95 && !s.shocked) {
+            s.shocked = true;
+            applyShock(s.to.x * W, s.to.y * H);
+          }
+
+          return {
+            x: s.from.x + (s.to.x - s.from.x) * progress,
+            y: s.from.y + (s.to.y - s.from.y) * progress,
+          };
+        }
+
+        // Focus position with lerp smoothing (same 0.08 as blinds)
+        let focusCur = { x: corners[0].x, y: corners[0].y };
+        let sweepCycle = 0;
+
+        // --- Proximity color helper (focus point acts as the "mouse") ---
+        let focusPxX = 0,
+          focusPxY = 0;
+
+        // --- Draw ---
+        const circPath = new Path2D();
+        circPath.arc(0, 0, HALF_DOT, 0, Math.PI * 2);
+
+        const t0 = performance.now();
+        let sweepElapsed = 0; // manually accumulated (pausable)
+        let lastRenderTs = 0;
+
+        function render(ts) {
+          requestAnimationFrame(render);
+          const dt = lastRenderTs ? Math.min(0.05, (ts - lastRenderTs) / 1000) : 0.016;
+          lastRenderTs = ts;
+
+          // Only advance sweep time when not paused
+          if (!sweepPaused) {
+            sweepElapsed += dt;
+          }
+
+          if (sweepElapsed > sweepCycle + sweepTotal) {
+            sweepCycle += sweepTotal;
+            buildSweeps();
+          }
+          const pos = getSweepPos(sweepElapsed - sweepCycle);
+
+          // Lerp smoothing (0.08 — matches blinds)
+          focusCur.x += (pos.x - focusCur.x) * 0.08;
+          focusCur.y += (pos.y - focusCur.y) * 0.08;
+
+          focusPxX = focusCur.x * W;
+          focusPxY = focusCur.y * H;
+
+          // Advance glow timers for each active glow dot
+          for (const g of glowDots) {
+            g.t += dt;
+          }
+          if (glowLineActive) {
+            glowLineT += dt;
+            if (glowLineT >= GLOW_DUR) glowLineActive = false;
+          }
+          // Remove finished glows
+          glowDots = glowDots.filter(g => g.t < GLOW_DUR);
+
+          // Draw — GSAP updates dot.ox / dot.oy automatically
+          ctx.clearRect(0, 0, canvas.width / dpr, canvas.height / dpr);
+
+          // Glow halos — tight radial around the last 2 dots
+          for (const g of glowDots) {
+            if (g.t < 0) continue;
+            const progress = g.t / GLOW_DUR;
+            const intensity = progress < 0.1
+              ? progress / 0.1
+              : 1 - (progress - 0.1) / 0.9;
+            const alpha = intensity * 0.5;
+            const grad = ctx.createRadialGradient(g.cx, g.cy, HALF_DOT, g.cx, g.cy, GLOW_RADIUS);
+            grad.addColorStop(0, `rgba(${GLOW_COLOR.r},${GLOW_COLOR.g},${GLOW_COLOR.b},${alpha})`);
+            grad.addColorStop(1, `rgba(${GLOW_COLOR.r},${GLOW_COLOR.g},${GLOW_COLOR.b},0)`);
+            ctx.fillStyle = grad;
+            ctx.fillRect(g.cx - GLOW_RADIUS, g.cy - GLOW_RADIUS, GLOW_RADIUS * 2, GLOW_RADIUS * 2);
+          }
+
+          // Lightning bolt between the 2 glowing dots
+          if (glowLineActive && glowDots.length >= 2 && lightningPath.length > 1) {
+            const a = glowDots[0];
+            const b = glowDots[1];
+            if (a.t >= 0 && b.t >= 0) {
+              const lineProgress = glowLineT / GLOW_DUR;
+
+              // Re-generate bolt every ~80ms for flicker (like real lightning)
+              lightningFlicker += dt;
+              if (lightningFlicker > 0.08) {
+                lightningFlicker = 0;
+                newBolt(a.cx, a.cy, b.cx, b.cy);
+              }
+
+              // Draw-in: bolt extends from A to B over first 15%
+              const drawIn = Math.min(1, lineProgress / 0.15);
+              // Fade-out: starts at 40%, gone by 100%
+              const fadeOut = lineProgress > 0.4
+                ? 1 - (lineProgress - 0.4) / 0.6
+                : 1;
+              // Flicker intensity (subtle random variation)
+              const flicker = 0.85 + Math.random() * 0.15;
+              const baseAlpha = drawIn * fadeOut * flicker;
+
+              // How many points of the path to draw (for draw-in animation)
+              const pointCount = Math.max(2, Math.ceil(lightningPath.length * drawIn));
+
+              // Multi-pass rendering: outer glow → mid glow → bright core
+              const passes = [
+                { width: 8,   alpha: baseAlpha * 0.08, color: GLOW_COLOR },
+                { width: 4,   alpha: baseAlpha * 0.2,  color: GLOW_COLOR },
+                { width: 1.5, alpha: baseAlpha * 0.6,  color: GLOW_COLOR },
+              ];
+
+              ctx.save();
+              ctx.lineCap = "round";
+              ctx.lineJoin = "round";
+
+              for (const pass of passes) {
+                ctx.beginPath();
+                ctx.moveTo(lightningPath[0].x, lightningPath[0].y);
+                for (let i = 1; i < pointCount; i++) {
+                  ctx.lineTo(lightningPath[i].x, lightningPath[i].y);
+                }
+                ctx.strokeStyle = `rgba(${pass.color.r},${pass.color.g},${pass.color.b},${pass.alpha})`;
+                ctx.lineWidth = pass.width;
+                ctx.stroke();
+              }
+
+              ctx.restore();
+            }
+          }
+
+          for (const dot of dots) {
+            const drawX = dot.cx + dot.ox;
+            const drawY = dot.cy + dot.oy;
+
+            // Proximity color
+            const dx = dot.cx - focusPxX;
+            const dy = dot.cy - focusPxY;
+            const dsq = dx * dx + dy * dy;
+
+            let r, g, b;
+            if (dsq <= PROX_SQ) {
+              const dist = Math.sqrt(dsq);
+              const t = 1 - dist / PROXIMITY;
+              r = Math.round(
+                BASE_COLOR.r + (ACTIVE_COLOR.r - BASE_COLOR.r) * t,
+              );
+              g = Math.round(
+                BASE_COLOR.g + (ACTIVE_COLOR.g - BASE_COLOR.g) * t,
+              );
+              b = Math.round(
+                BASE_COLOR.b + (ACTIVE_COLOR.b - BASE_COLOR.b) * t,
+              );
+            } else {
+              r = BASE_COLOR.r;
+              g = BASE_COLOR.g;
+              b = BASE_COLOR.b;
+            }
+
+            // Glow boost: the last 2 landed dots get brighter
+            for (const gd of glowDots) {
+              if (gd.t < 0) continue;
+              if (dot.cx === gd.cx && dot.cy === gd.cy) {
+                const gp = gd.t / GLOW_DUR;
+                const gi = gp < 0.1 ? gp / 0.1 : 1 - (gp - 0.1) / 0.9;
+                r = Math.min(255, Math.round(r + (GLOW_COLOR.r - r) * gi));
+                g = Math.min(255, Math.round(g + (GLOW_COLOR.g - g) * gi));
+                b = Math.min(255, Math.round(b + (GLOW_COLOR.b - b) * gi));
+                break;
+              }
+            }
+
+            ctx.save();
+            ctx.translate(drawX, drawY);
+            ctx.fillStyle = `rgb(${r},${g},${b})`;
+            ctx.fill(circPath);
+            ctx.restore();
+          }
+        }
+
+        requestAnimationFrame(render);
+      })();
+    </script>
+  </body>
+</html>

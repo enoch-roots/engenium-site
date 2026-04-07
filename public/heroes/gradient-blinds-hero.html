@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Engenium Labs — Gradient Blinds Hero</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300;1,400&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --roman-dusk: #171210;
+    --warm-linen: #F5EFE0;
+    --aged-clay: #A86040;
+    --verdigris: #507E78;
+    --roman-dusk-rgb: 23, 18, 16;
+    --warm-linen-rgb: 245, 239, 224;
+    --aged-clay-rgb: 168, 96, 64;
+    --verdigris-rgb: 80, 126, 120;
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    width: 100%; height: 100%;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow: hidden;
+  }
+
+  body {
+    background: #0c0a08;
+    color: var(--warm-linen);
+  }
+
+  /* ═══════════════════════════════════════
+     GRAIN — on top of everything
+     ═══════════════════════════════════════ */
+  .grain-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    opacity: 0.22;
+    mix-blend-mode: overlay;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 160px 160px;
+  }
+
+  /* ═══════════════════════════════════════
+     NIGHTY NIGHT BACKGROUND
+     ═══════════════════════════════════════ */
+  .bg-nighty {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .bg-nighty .plane {
+    position: absolute;
+    width: 200%; height: 200%;
+    top: -20%; left: -50%;
+    background: linear-gradient(
+      -60deg,
+      rgba(var(--verdigris-rgb), 0.12) 0%,
+      rgba(var(--roman-dusk-rgb), 0.6) 35%,
+      rgba(var(--aged-clay-rgb), 0.08) 55%,
+      rgba(var(--roman-dusk-rgb), 0.9) 100%
+    );
+    transform: perspective(800px) rotateX(55deg);
+    transform-origin: center center;
+    animation: nightDrift 18s ease-in-out infinite alternate;
+  }
+
+  .bg-nighty .horizon-glow {
+    position: absolute;
+    bottom: 40%; left: 0; right: 0; height: 30%;
+    background: radial-gradient(
+      ellipse 120% 80% at 50% 100%,
+      rgba(var(--aged-clay-rgb), 0.06) 0%,
+      transparent 70%
+    );
+  }
+
+  @keyframes nightDrift {
+    0%   { transform: perspective(800px) rotateX(55deg) translateX(-2%); }
+    100% { transform: perspective(800px) rotateX(55deg) translateX(2%); }
+  }
+
+  /* ═══════════════════════════════════════
+     GRADIENT BLINDS — WebGL canvas
+     ═══════════════════════════════════════ */
+  .blinds-wrapper {
+    position: fixed;
+    inset: 0;
+    z-index: 5;
+    overflow: hidden;
+  }
+
+  #blindsCanvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    opacity: 0;
+    animation: blindsFadeIn 2s ease-out 0.3s forwards;
+    mix-blend-mode: lighten;
+  }
+
+  @keyframes blindsFadeIn {
+    from { opacity: 0; }
+    to   { opacity: 0.9; }
+  }
+
+  /* ═══════════════════════════════════════
+     COPY OVERLAY
+     ═══════════════════════════════════════ */
+  .copy-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0 6vw;
+    pointer-events: none;
+  }
+
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 300;
+    font-size: 0.7rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--verdigris);
+    margin-bottom: 1.6rem;
+    opacity: 0;
+    animation: fadeUp 1s ease-out 0.4s forwards;
+  }
+
+  .headline {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: clamp(2.6rem, 5.5vw, 5rem);
+    line-height: 1.15;
+    text-align: center;
+    letter-spacing: -0.01em;
+    max-width: 20ch;
+    margin-bottom: 1.4rem;
+    opacity: 0;
+    animation: fadeUp 1.2s ease-out 0.7s forwards;
+  }
+
+  .headline em {
+    font-style: italic;
+    color: var(--aged-clay);
+  }
+
+  .headline .verd {
+    color: var(--verdigris);
+    font-style: italic;
+  }
+
+  .subline {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    font-size: clamp(0.9rem, 1.3vw, 1.15rem);
+    line-height: 1.6;
+    text-align: center;
+    letter-spacing: 0.03em;
+    color: rgba(var(--warm-linen-rgb), 0.55);
+    max-width: 44ch;
+    opacity: 0;
+    animation: fadeUp 1s ease-out 1.2s forwards;
+  }
+
+  .cta-row {
+    display: flex;
+    gap: 1.2rem;
+    margin-top: 2.4rem;
+    opacity: 0;
+    animation: fadeUp 1s ease-out 1.6s forwards;
+    pointer-events: auto;
+  }
+
+  .cta-primary {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 400;
+    font-size: 0.85rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--roman-dusk);
+    background: var(--warm-linen);
+    border: none;
+    padding: 0.75rem 2rem;
+    cursor: pointer;
+    transition: background 0.3s ease, color 0.3s ease;
+  }
+
+  .cta-primary:hover {
+    background: var(--aged-clay);
+    color: var(--warm-linen);
+  }
+
+  .cta-secondary {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    font-size: 0.85rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgba(var(--warm-linen-rgb), 0.55);
+    background: transparent;
+    border: 1px solid rgba(var(--warm-linen-rgb), 0.15);
+    padding: 0.75rem 2rem;
+    cursor: pointer;
+    transition: border-color 0.3s ease, color 0.3s ease;
+  }
+
+  .cta-secondary:hover {
+    border-color: var(--verdigris);
+    color: var(--verdigris);
+  }
+
+  /* ═══════════════════════════════════════
+     CORNER LABEL
+     ═══════════════════════════════════════ */
+  .corner-label {
+    position: fixed;
+    top: 3rem; right: 4vw;
+    z-index: 60;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 300;
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(var(--warm-linen-rgb), 0.35);
+    opacity: 0;
+    animation: fadeUp 1s ease-out 2s forwards;
+  }
+
+  /* ═══════════════════════════════════════
+     NAV MARK
+     ═══════════════════════════════════════ */
+  .nav-mark {
+    position: fixed;
+    top: 3rem; left: 4vw;
+    z-index: 60;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: 1.1rem;
+    letter-spacing: 0.04em;
+    color: var(--warm-linen);
+    opacity: 0;
+    animation: fadeUp 1s ease-out 0.2s forwards;
+  }
+
+  .nav-mark span {
+    font-weight: 300;
+    color: rgba(var(--warm-linen-rgb), 0.4);
+    margin-left: 0.3em;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<!-- Background -->
+<div class="bg-nighty">
+  <div class="plane"></div>
+  <div class="horizon-glow"></div>
+</div>
+
+<!-- Gradient Blinds WebGL -->
+<div class="blinds-wrapper">
+  <canvas id="blindsCanvas"></canvas>
+</div>
+
+<!-- Grain -->
+<div class="grain-overlay"></div>
+
+<!-- Corner label -->
+<div class="corner-label">Generative Engine Optimization</div>
+
+<!-- Nav mark -->
+<div class="nav-mark">Engenium<span>Labs</span></div>
+
+<!-- Copy -->
+<div class="copy-overlay">
+  <div class="eyebrow">The Window Is Open</div>
+  <h1 class="headline">
+    Most businesses aren't in AI answers yet.<br><em>That's a window.</em>
+  </h1>
+  <p class="subline">
+    People aren't just Googling anymore. They're asking ChatGPT, Perplexity, Gemini. The businesses that show up in those answers get the call. Right now, most of your competitors aren't there.
+  </p>
+  <div class="cta-row">
+    <button class="cta-primary">See how it works</button>
+    <button class="cta-secondary">Our approach</button>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════
+// GRADIENT BLINDS — Pure WebGL (zero deps)
+// Ported from React Bits GradientBlinds
+// ═══════════════════════════════════════
+(function() {
+  const canvas = document.getElementById('blindsCanvas');
+  if (!canvas) return;
+
+  // --- Config ---
+  // Brand colors: Aged Clay → Verdigris
+  const COLORS = [
+    [168/255, 96/255, 64/255],   // #A86040 Aged Clay
+    [80/255, 126/255, 120/255]   // #507E78 Verdigris
+  ];
+  const COLOR_COUNT  = 2;
+  const ANGLE        = 0;
+  const NOISE        = 0.3;
+  const BLIND_COUNT  = 12;
+  const BLIND_MIN_W  = 110;
+  const SPOT_RADIUS  = 0.5;
+  const SPOT_SOFT    = 1.0;
+  const SPOT_OPACITY = 1.0;
+  const DISTORT      = 34.0;
+  const SHINE_FLIP   = 0.0; // left
+  const DAMPEN       = 0.15;
+
+  // Pad colors array to 8 (shader expects 8 color uniforms)
+  while (COLORS.length < 8) COLORS.push(COLORS[COLORS.length - 1]);
+
+  const dpr = Math.min(2, window.devicePixelRatio || 1);
+  const gl = canvas.getContext('webgl', { alpha: true, antialias: true, premultipliedAlpha: false });
+  if (!gl) return;
+
+  // --- Compile shader helper ---
+  function compile(type, src) {
+    const s = gl.createShader(type);
+    gl.shaderSource(s, src);
+    gl.compileShader(s);
+    if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) {
+      console.error('Shader compile error:', gl.getShaderInfoLog(s));
+      gl.deleteShader(s);
+      return null;
+    }
+    return s;
+  }
+
+  // --- Vertex shader ---
+  const vsSrc = `
+    attribute vec2 position;
+    attribute vec2 uv;
+    varying vec2 vUv;
+    void main() {
+      vUv = uv;
+      gl_Position = vec4(position, 0.0, 1.0);
+    }
+  `;
+
+  // --- Fragment shader (the Gradient Blinds effect) ---
+  const fsSrc = `
+    #ifdef GL_ES
+    precision mediump float;
+    #endif
+
+    uniform vec3 iResolution;
+    uniform vec2 iMouse;
+    uniform float iTime;
+
+    uniform float uAngle;
+    uniform float uNoise;
+    uniform float uBlindCount;
+    uniform float uSpotlightRadius;
+    uniform float uSpotlightSoftness;
+    uniform float uSpotlightOpacity;
+    uniform float uMirror;
+    uniform float uDistort;
+    uniform float uShineFlip;
+    uniform vec3 uColor0;
+    uniform vec3 uColor1;
+    uniform vec3 uColor2;
+    uniform vec3 uColor3;
+    uniform vec3 uColor4;
+    uniform vec3 uColor5;
+    uniform vec3 uColor6;
+    uniform vec3 uColor7;
+    uniform int uColorCount;
+
+    varying vec2 vUv;
+
+    float rand(vec2 co){
+      return fract(sin(dot(co, vec2(12.9898,78.233))) * 43758.5453);
+    }
+
+    vec2 rotate2D(vec2 p, float a){
+      float c = cos(a);
+      float s = sin(a);
+      return mat2(c, -s, s, c) * p;
+    }
+
+    vec3 getGradientColor(float t){
+      float tt = clamp(t, 0.0, 1.0);
+      int count = uColorCount;
+      if (count < 2) count = 2;
+      float scaled = tt * float(count - 1);
+      float seg = floor(scaled);
+      float f = fract(scaled);
+
+      if (seg < 1.0) return mix(uColor0, uColor1, f);
+      if (seg < 2.0 && count > 2) return mix(uColor1, uColor2, f);
+      if (seg < 3.0 && count > 3) return mix(uColor2, uColor3, f);
+      if (seg < 4.0 && count > 4) return mix(uColor3, uColor4, f);
+      if (seg < 5.0 && count > 5) return mix(uColor4, uColor5, f);
+      if (seg < 6.0 && count > 6) return mix(uColor5, uColor6, f);
+      if (seg < 7.0 && count > 7) return mix(uColor6, uColor7, f);
+      if (count > 7) return uColor7;
+      if (count > 6) return uColor6;
+      if (count > 5) return uColor5;
+      if (count > 4) return uColor4;
+      if (count > 3) return uColor3;
+      if (count > 2) return uColor2;
+      return uColor1;
+    }
+
+    void main(){
+      vec2 uv0 = vUv;
+
+      float aspect = iResolution.x / iResolution.y;
+      vec2 p = uv0 * 2.0 - 1.0;
+      p.x *= aspect;
+      vec2 pr = rotate2D(p, uAngle);
+      pr.x /= aspect;
+      vec2 uv = pr * 0.5 + 0.5;
+
+      vec2 uvMod = uv;
+      if (uDistort > 0.0) {
+        float a = uvMod.y * 6.0;
+        float b = uvMod.x * 6.0;
+        float w = 0.01 * uDistort;
+        uvMod.x += sin(a) * w;
+        uvMod.y += cos(b) * w;
+      }
+      float t = uvMod.x;
+      if (uMirror > 0.5) {
+        t = 1.0 - abs(1.0 - 2.0 * fract(t));
+      }
+      vec3 base = getGradientColor(t);
+
+      vec2 offset = vec2(iMouse.x/iResolution.x, iMouse.y/iResolution.y);
+      float d = length(uv0 - offset);
+      float r = max(uSpotlightRadius, 1e-4);
+      float dn = d / r;
+      float spot = (1.0 - 2.0 * pow(dn, uSpotlightSoftness)) * uSpotlightOpacity;
+      vec3 cir = vec3(spot);
+      float stripe = fract(uvMod.x * max(uBlindCount, 1.0));
+      if (uShineFlip > 0.5) stripe = 1.0 - stripe;
+      vec3 ran = vec3(stripe);
+
+      vec3 col = cir + base - ran;
+      col += (rand(gl_FragCoord.xy + iTime) - 0.5) * uNoise;
+
+      gl_FragColor = vec4(col, 1.0);
+    }
+  `;
+
+  // --- Build program ---
+  const vs = compile(gl.VERTEX_SHADER, vsSrc);
+  const fs = compile(gl.FRAGMENT_SHADER, fsSrc);
+  if (!vs || !fs) return;
+  const prog = gl.createProgram();
+  gl.attachShader(prog, vs);
+  gl.attachShader(prog, fs);
+  gl.linkProgram(prog);
+  if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
+    console.error('Program link error:', gl.getProgramInfoLog(prog));
+    return;
+  }
+  gl.useProgram(prog);
+
+  // --- Fullscreen quad (two triangles) with UVs ---
+  // positions: clip space  |  uvs: 0-1
+  const vertData = new Float32Array([
+    // pos       uv
+    -1, -1,    0, 0,
+     1, -1,    1, 0,
+    -1,  1,    0, 1,
+     1,  1,    1, 1,
+  ]);
+  const indices = new Uint16Array([0, 1, 2, 2, 1, 3]);
+
+  const vbo = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, vbo);
+  gl.bufferData(gl.ARRAY_BUFFER, vertData, gl.STATIC_DRAW);
+
+  const ibo = gl.createBuffer();
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ibo);
+  gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW);
+
+  const aPos = gl.getAttribLocation(prog, 'position');
+  const aUv  = gl.getAttribLocation(prog, 'uv');
+  gl.enableVertexAttribArray(aPos);
+  gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 16, 0);
+  gl.enableVertexAttribArray(aUv);
+  gl.vertexAttribPointer(aUv, 2, gl.FLOAT, false, 16, 8);
+
+  // --- Get uniform locations ---
+  const u = {};
+  const uNames = [
+    'iResolution','iMouse','iTime',
+    'uAngle','uNoise','uBlindCount',
+    'uSpotlightRadius','uSpotlightSoftness','uSpotlightOpacity',
+    'uMirror','uDistort','uShineFlip',
+    'uColor0','uColor1','uColor2','uColor3',
+    'uColor4','uColor5','uColor6','uColor7',
+    'uColorCount'
+  ];
+  uNames.forEach(n => u[n] = gl.getUniformLocation(prog, n));
+
+  // --- Set static uniforms ---
+  gl.uniform1f(u.uAngle, (ANGLE * Math.PI) / 180);
+  gl.uniform1f(u.uNoise, NOISE);
+  gl.uniform1f(u.uSpotlightRadius, SPOT_RADIUS);
+  gl.uniform1f(u.uSpotlightSoftness, SPOT_SOFT);
+  gl.uniform1f(u.uSpotlightOpacity, SPOT_OPACITY);
+  gl.uniform1f(u.uMirror, 0.0);
+  gl.uniform1f(u.uDistort, DISTORT);
+  gl.uniform1f(u.uShineFlip, SHINE_FLIP);
+  gl.uniform1i(u.uColorCount, COLOR_COUNT);
+
+  // Set color uniforms
+  for (let i = 0; i < 8; i++) {
+    gl.uniform3fv(u['uColor' + i], COLORS[i]);
+  }
+
+  // --- Spotlight state ---
+  let spotX = 0, spotY = 0;
+  let canvasW = 1, canvasH = 1;
+
+  // --- Resize handler ---
+  function resize() {
+    const w = canvas.parentElement.clientWidth  || window.innerWidth;
+    const h = canvas.parentElement.clientHeight || window.innerHeight;
+    canvas.width  = Math.round(w * dpr);
+    canvas.height = Math.round(h * dpr);
+    canvasW = canvas.width;
+    canvasH = canvas.height;
+    gl.viewport(0, 0, canvasW, canvasH);
+    gl.uniform3f(u.iResolution, canvasW, canvasH, 1.0);
+
+    // Compute effective blind count based on min width
+    const maxByMinWidth = Math.max(1, Math.floor(w / BLIND_MIN_W));
+    const effective = Math.min(BLIND_COUNT, maxByMinWidth);
+    gl.uniform1f(u.uBlindCount, Math.max(1, effective));
+  }
+
+  const ro = new ResizeObserver(resize);
+  ro.observe(canvas.parentElement);
+  resize();
+
+  // ═══════════════════════════════════════
+  // AUTONOMOUS SPOTLIGHT — corner sweep
+  // Continuously sweeps between corners,
+  // no pauses, occasionally reverses.
+  // Avoids center to keep text readable.
+  // ═══════════════════════════════════════
+
+  const M = 0.08; // margin from edge
+  const corners = [
+    { x: M,     y: M },       // bottom-left
+    { x: 1 - M, y: M },       // bottom-right
+    { x: 1 - M, y: 1 - M },   // top-right
+    { x: M,     y: 1 - M },   // top-left
+  ];
+
+  // Build sweep: corner-to-corner, no pauses, random reversals
+  const sweeps = [];
+  let sweepTotal = 0;
+
+  function buildSweeps() {
+    sweeps.length = 0;
+    sweepTotal = 0;
+    let idx = 0;
+    let dir = 1;
+    const count = 30 + Math.floor(Math.random() * 15);
+
+    for (let i = 0; i < count; i++) {
+      const from = corners[idx];
+      // Reverse ~30% of the time (skip first: always bottom-left → bottom-right)
+      if (i > 0 && Math.random() < 0.3) dir = -dir;
+      idx = (idx + dir + corners.length) % corners.length;
+      const to = corners[idx];
+      // Vary speed: 1.8–3.8s per sweep
+      const dur = 1.8 + Math.random() * 2.0;
+      sweeps.push({ from, to, dur, start: sweepTotal });
+      sweepTotal += dur;
+    }
+  }
+  buildSweeps();
+
+  // Smooth ease for continuous sweeping feel
+  function ease(t) {
+    // sine ease-in-out — smooth without hard stops
+    return 0.5 - 0.5 * Math.cos(t * Math.PI);
+  }
+
+  function getSweepPos(time) {
+    let t = time % sweepTotal;
+
+    // Find current sweep segment
+    let lo = 0, hi = sweeps.length - 1;
+    while (lo < hi) {
+      const mid = (lo + hi) >> 1;
+      if (sweeps[mid].start + sweeps[mid].dur < t) lo = mid + 1;
+      else hi = mid;
+    }
+    const s = sweeps[lo];
+    const progress = ease((t - s.start) / s.dur);
+
+    return {
+      x: s.from.x + (s.to.x - s.from.x) * progress,
+      y: s.from.y + (s.to.y - s.from.y) * progress
+    };
+  }
+
+  // Initialize at first corner
+  spotX = corners[0].x * canvasW;
+  spotY = corners[0].y * canvasH;
+  gl.uniform2f(u.iMouse, spotX, spotY);
+
+  // --- Render loop ---
+  const t0 = performance.now();
+  let sweepCycle = 0;
+
+  function render(ts) {
+    requestAnimationFrame(render);
+
+    const elapsed = (ts - t0) * 0.001;
+    gl.uniform1f(u.iTime, elapsed);
+
+    // Rebuild on each cycle for variety
+    if (elapsed > sweepCycle + sweepTotal) {
+      sweepCycle += sweepTotal;
+      buildSweeps();
+    }
+
+    const pos = getSweepPos(elapsed - sweepCycle);
+
+    // Convert normalized → pixel coords
+    const tx = pos.x * canvasW;
+    const ty = pos.y * canvasH;
+
+    // Light smoothing so direction changes feel organic
+    spotX += (tx - spotX) * 0.08;
+    spotY += (ty - spotY) * 0.08;
+    gl.uniform2f(u.iMouse, spotX, spotY);
+
+    gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
+  }
+
+  requestAnimationFrame(render);
+})();
+</script>
+</body>
+</html>

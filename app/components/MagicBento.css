@@ -1,0 +1,306 @@
+/* ═══════════════════════════════════════
+   MAGIC BENTO — Engenium Services
+   Scrollable card layout with icons,
+   breathing room, and visual hierarchy.
+   ═══════════════════════════════════════ */
+
+/* ── Vertical card stack ── */
+.mb-services {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 64rem;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* ── Card wrapper (BorderGlow container) ── */
+.mb-card-wrapper {
+  width: 100%;
+}
+
+/* ── Two-column pairs for non-featured cards ── */
+@media (min-width: 768px) {
+  .mb-services {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+    padding: 0 2rem;
+  }
+
+  /* Featured cards span full width */
+  .mb-card-wrapper--featured {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (min-width: 1200px) {
+  .mb-services {
+    gap: 1.5rem;
+    padding: 0 2.5rem;
+  }
+}
+
+/* ── Card inner ── */
+.mb-card {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 2.5rem;
+  border-radius: inherit;
+  background: transparent;
+  font-weight: 300;
+}
+
+.mb-card--featured {
+  padding: 3rem 3.5rem;
+}
+
+/* ── Single-corner interior gradients ── */
+.mb-card--corner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.mb-card-wrapper:nth-child(1) .mb-card--corner::before {
+  background: radial-gradient(circle at 0% 0%, rgba(80, 126, 120, 0.18) 0%, transparent 55%);
+}
+.mb-card-wrapper:nth-child(2) .mb-card--corner::before {
+  background: radial-gradient(circle at 100% 0%, rgba(80, 126, 120, 0.16) 0%, transparent 55%);
+}
+.mb-card-wrapper:nth-child(3) .mb-card--corner::before {
+  background: radial-gradient(circle at 0% 100%, rgba(168, 96, 64, 0.12) 0%, transparent 50%);
+}
+.mb-card-wrapper:nth-child(4) .mb-card--corner::before {
+  background: radial-gradient(circle at 100% 100%, rgba(168, 96, 64, 0.12) 0%, transparent 50%);
+}
+.mb-card-wrapper:nth-child(5) .mb-card--corner::before {
+  background: radial-gradient(circle at 0% 100%, rgba(80, 126, 120, 0.16) 0%, transparent 55%);
+}
+.mb-card-wrapper:nth-child(6) .mb-card--corner::before {
+  background: radial-gradient(circle at 100% 0%, rgba(80, 126, 120, 0.18) 0%, transparent 55%);
+}
+
+/* ── Icon ── */
+.mb-card__icon {
+  position: relative;
+  z-index: 2;
+  margin-bottom: 1.5rem;
+}
+
+.mb-card--featured .mb-card__icon {
+  margin-bottom: 2rem;
+}
+
+/* ── Label ── */
+.mb-card__label {
+  position: relative;
+  z-index: 2;
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--verdigris, #507E78);
+  margin-bottom: 0.75rem;
+}
+
+.mb-card--featured .mb-card__label {
+  font-size: 0.85rem;
+}
+
+/* ── Title ── */
+.mb-card__title {
+  position: relative;
+  z-index: 2;
+  font-family: var(--font-cormorant), serif;
+  font-weight: 400;
+  font-size: 1.75rem;
+  line-height: 1.15;
+  margin: 0 0 0.6rem;
+  color: var(--warm-linen, #F5EFE0);
+}
+
+.mb-card--featured .mb-card__title {
+  font-size: 2.25rem;
+}
+
+/* ── Description ── */
+.mb-card__description {
+  position: relative;
+  z-index: 2;
+  font-family: var(--font-dm-sans), sans-serif;
+  font-size: 0.95rem;
+  font-weight: 400;
+  line-height: 1.6;
+  opacity: 0.7;
+  color: var(--warm-linen, #F5EFE0);
+  margin-bottom: 1.25rem;
+  max-width: 38rem;
+}
+
+.mb-card--featured .mb-card__description {
+  font-size: 1.05rem;
+  max-width: 44rem;
+}
+
+/* ── Highlight subtext (aged-clay accent) ── */
+.mb-card__highlight {
+  position: relative;
+  z-index: 2;
+  font-family: var(--font-cormorant), serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--aged-clay, #A86040);
+  opacity: 0.75;
+  margin-bottom: 1.25rem;
+  padding-left: 1rem;
+  border-left: 2px solid rgba(168, 96, 64, 0.25);
+}
+
+.mb-card--featured .mb-card__highlight {
+  font-size: 1.1rem;
+}
+
+/* ── Bullet list ── */
+.mb-card__bullets {
+  position: relative;
+  z-index: 2;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.mb-card__bullets li {
+  font-family: var(--font-dm-sans), sans-serif;
+  font-size: 0.88rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--warm-linen, #F5EFE0);
+  opacity: 0.55;
+  padding-left: 1.25rem;
+  position: relative;
+}
+
+.mb-card__bullets li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--verdigris, #507E78);
+  opacity: 0.6;
+}
+
+.mb-card--featured .mb-card__bullets li {
+  font-size: 0.95rem;
+}
+
+/* Featured cards get aged-clay bullet dots */
+.mb-card--featured .mb-card__bullets li::before {
+  background: var(--aged-clay, #A86040);
+  opacity: 0.45;
+}
+
+/* ── Featured cards: side-by-side icon + content on wide screens ── */
+@media (min-width: 768px) {
+  .mb-card--featured {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 3rem;
+  }
+
+  .mb-card--featured .mb-card__icon {
+    flex-shrink: 0;
+    margin-bottom: 0;
+    padding-top: 0.5rem;
+  }
+
+  .mb-card--featured .mb-card__content-wrap {
+    flex: 1;
+  }
+}
+
+/* ── Mobile adjustments ── */
+@media (max-width: 767px) {
+  .mb-services {
+    padding: 0 1.25rem;
+    gap: 1rem;
+  }
+
+  .mb-card {
+    padding: 1.5rem 1.35rem;
+  }
+
+  .mb-card--featured {
+    padding: 1.75rem 1.5rem;
+  }
+
+  .mb-card__icon {
+    margin-bottom: 1rem;
+  }
+
+  .mb-card__label {
+    font-size: 0.65rem;
+  }
+
+  .mb-card__title {
+    font-size: 1.3rem;
+  }
+
+  .mb-card--featured .mb-card__title {
+    font-size: 1.5rem;
+  }
+
+  .mb-card__description {
+    font-size: 0.85rem;
+  }
+
+  .mb-card__highlight {
+    font-size: 0.88rem;
+  }
+
+  .mb-card__bullets li {
+    font-size: 0.8rem;
+  }
+}
+
+/* ── Small phones (≤ 380px) — extra breathing room ── */
+@media (max-width: 380px) {
+  .mb-services {
+    padding: 0 0.75rem;
+  }
+
+  .mb-card {
+    padding: 1.25rem 1.15rem;
+  }
+
+  .mb-card--featured {
+    padding: 1.5rem 1.25rem;
+  }
+
+  .mb-card__title {
+    font-size: 1.15rem;
+  }
+
+  .mb-card--featured .mb-card__title {
+    font-size: 1.3rem;
+  }
+
+  .mb-card__description {
+    font-size: 0.82rem;
+  }
+}

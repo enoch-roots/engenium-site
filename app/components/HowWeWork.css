@@ -1,0 +1,127 @@
+/* ═══════════════════════════════════════
+   HOW WE WORK — Manifesto layout
+   Pure vertical rhythm. No cards, no grids.
+   Headline blocks with generous negative
+   space, reading like principles.
+   ═══════════════════════════════════════ */
+
+.hww {
+  max-width: 42rem;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* ── Section ── */
+.hww__section {
+  padding-bottom: 1rem;
+}
+
+/* ── Section header (number + label) ── */
+.hww__section-header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin-bottom: 3.5rem;
+}
+
+.hww__section-number {
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 0.65rem;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  color: var(--aged-clay, #A86040);
+  opacity: 0.4;
+}
+
+.hww__section-label {
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 0.65rem;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--verdigris, #507E78);
+  opacity: 0.5;
+}
+
+/* ── Block (headline + body pair) ── */
+.hww__block {
+  margin-bottom: 4.5rem;
+}
+
+.hww__block--first {
+  /* First block in section — no extra top margin needed */
+}
+
+/* ── Headline ── */
+.hww__headline {
+  font-family: var(--font-cormorant), serif;
+  font-weight: 300;
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  color: var(--warm-linen, #F5EFE0);
+  margin: 0 0 1rem;
+}
+
+/* ── Body ── */
+.hww__body {
+  font-family: var(--font-dm-sans), sans-serif;
+  font-weight: 300;
+  font-size: clamp(0.88rem, 1.3vw, 1rem);
+  line-height: 1.65;
+  color: var(--warm-linen, #F5EFE0);
+  opacity: 0.45;
+  max-width: 34rem;
+  margin: 0;
+}
+
+/* ── Section divider ── */
+.hww__divider {
+  width: 2.5rem;
+  height: 1px;
+  background: var(--aged-clay, #A86040);
+  opacity: 0.2;
+  margin: 1rem 0 4.5rem;
+}
+
+
+/* ═══════════════════════════════════════
+   MOBILE
+   ═══════════════════════════════════════ */
+
+@media (max-width: 767px) {
+  .hww {
+    padding: 0 1.25rem;
+  }
+
+  .hww__section-header {
+    margin-bottom: 2.5rem;
+  }
+
+  .hww__block {
+    margin-bottom: 3.5rem;
+  }
+
+  .hww__headline {
+    font-size: clamp(1.5rem, 6vw, 2rem);
+  }
+
+  .hww__body {
+    font-size: 0.88rem;
+  }
+
+  .hww__divider {
+    margin: 0.5rem 0 3.5rem;
+  }
+}
+
+/* ── Large desktop — more breathing room ── */
+@media (min-width: 1200px) {
+  .hww__block {
+    margin-bottom: 5.5rem;
+  }
+
+  .hww__divider {
+    margin: 1.5rem 0 5.5rem;
+  }
+}

@@ -1,0 +1,358 @@
+/* ═══════════════════════════════════════════════════════
+   TrueFocusHero — responsive styles
+   ═══════════════════════════════════════════════════════ */
+
+/* ── Root ───────────────────────────────────────────── */
+.tf-root {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: #171210;
+  font-family: var(--font-cormorant), serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Background layers ──────────────────────────────── */
+.tf-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.tf-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: radial-gradient(
+    ellipse 70% 60% at 50% 50%,
+    rgba(23, 18, 16, 0.55) 0%,
+    rgba(23, 18, 16, 0.3) 40%,
+    rgba(23, 18, 16, 0.7) 100%
+  );
+  pointer-events: none;
+}
+
+.tf-grain {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  opacity: 0.4;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 140px 140px;
+}
+
+/* ── Logo ───────────────────────────────────────────── */
+.tf-logo-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  display: flex;
+  justify-content: center;
+  padding-top: clamp(2.5rem, 6vh, 5rem);
+  pointer-events: none;
+  isolation: isolate;
+}
+
+.tf-logo-wrap {
+  display: flex;
+  justify-content: center;
+  filter: drop-shadow(0 0 40px rgba(23, 18, 16, 0.8));
+}
+
+.tf-logo-svg {
+  width: clamp(220px, 28vw, 380px);
+  height: auto;
+}
+
+/* ── Logo variant toggling ──────────────────────────── */
+/* Desktop: show classic, hide ghost */
+.tf-logo--ghost {
+  display: none;
+}
+.tf-logo--classic {
+  display: flex;
+}
+
+/* ── Hero content area ──────────────────────────────── */
+.tf-hero {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem clamp(1.5rem, 5vw, 4rem);
+  padding-top: clamp(10rem, 18vh, 16rem);
+  user-select: text;
+}
+
+/* ── TrueFocus segments ─────────────────────────────── */
+.tf-segments {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(0.6rem, 2vw, 1.2rem);
+}
+
+.tf-segment {
+  position: relative;
+  display: inline-block;
+  padding: 0.2em 0.45em;
+  font-family: var(--font-cormorant), serif;
+  font-weight: 300;
+  font-size: clamp(2rem, 7vw, 6.5rem);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  color: #f5efe0;
+  transition: filter 0.5s cubic-bezier(0.25, 0.1, 0.25, 1),
+    opacity 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+  cursor: default;
+  white-space: nowrap;
+  text-align: center;
+}
+
+/* ── Border frame ───────────────────────────────────── */
+.tf-border-frame {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  border-radius: 4px;
+}
+
+.tf-edge {
+  position: absolute;
+  background: #507e78;
+  transition: transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1),
+    opacity 0.2s ease;
+}
+
+.tf-edge-top {
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  transform-origin: left;
+}
+.tf-edge-right {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 1px;
+  transform-origin: top;
+}
+.tf-edge-bottom {
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  transform-origin: right;
+}
+.tf-edge-left {
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 1px;
+  transform-origin: bottom;
+}
+
+.tf-corner {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: #507e78;
+  transition: opacity 0.3s ease;
+}
+.tf-corner-tl { top: -2px; left: -2px; }
+.tf-corner-tr { top: -2px; right: -2px; }
+.tf-corner-bl { bottom: -2px; left: -2px; }
+.tf-corner-br { bottom: -2px; right: -2px; }
+
+/* ── Subtitle ───────────────────────────────────────── */
+.tf-subtitle {
+  margin-top: clamp(1.5rem, 3vh, 3rem);
+  font-family: var(--font-dm-sans), sans-serif;
+  font-weight: 400;
+  font-size: clamp(0.95rem, 2.2vw, 1.5rem);
+  letter-spacing: 0.04em;
+  opacity: 0.7;
+  text-align: center;
+  line-height: 1.6;
+  color: #f5efe0;
+  max-width: 36ch;
+  padding: 0 1rem;
+}
+
+/* ── CTA row ────────────────────────────────────────── */
+.tf-cta-row {
+  display: flex;
+  gap: 1.2rem;
+  margin-top: clamp(1.5rem, 3vh, 2.4rem);
+  align-items: center;
+  z-index: 20;
+}
+
+.tf-cta-primary {
+  font-family: var(--font-dm-sans), sans-serif;
+  font-weight: 400;
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #171210;
+  background: #f5efe0;
+  border: none;
+  padding: 0.75rem 2rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+.tf-cta-primary:hover {
+  background: #a86040;
+  color: #f5efe0;
+}
+
+.tf-cta-secondary {
+  font-family: var(--font-dm-sans), sans-serif;
+  font-weight: 300;
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(245, 239, 224, 0.55);
+  background: transparent;
+  border: 1px solid rgba(245, 239, 224, 0.15);
+  padding: 0.75rem 2rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: border-color 0.3s ease, color 0.3s ease;
+}
+.tf-cta-secondary:hover {
+  border-color: #507e78;
+  color: #507e78;
+}
+
+/* ── Config label ───────────────────────────────────── */
+.tf-config-label {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-jetbrains), monospace;
+  font-weight: 300;
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.6;
+  z-index: 20;
+  white-space: nowrap;
+  color: #f5efe0;
+}
+
+/* ═══════════════════════════════════════════════════════
+   MOBILE — max-width: 768px
+
+   Layout strategy: instead of centering everything in a
+   clump, we spread the hero across the full viewport.
+   - Logo sits in the top third (via its own absolute layer)
+   - Headline anchors the visual centre
+   - Subtitle + CTAs push toward the lower third
+   ═══════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  /* ── Logo: swap to ghost variant on mobile ── */
+  .tf-logo--classic {
+    display: none;
+  }
+  .tf-logo--ghost {
+    display: flex;
+  }
+
+  .tf-logo-layer {
+    padding-top: clamp(3.5rem, 8vh, 5rem);
+  }
+
+  .tf-logo-svg {
+    width: clamp(220px, 65vw, 320px);
+  }
+
+  /* ── Hero: true vertical center for headline group,
+         CTAs pinned at the bottom via absolute positioning ── */
+  .tf-hero {
+    padding: 0 1.5rem;
+    padding-top: 0;
+    padding-bottom: 0;
+    justify-content: center;
+    align-items: center;
+    gap: 0;
+  }
+
+  /* ── Segments: allow wrapping, tighter sizing ── */
+  .tf-segments {
+    gap: 0.4rem;
+    max-width: 100%;
+  }
+
+  .tf-segment {
+    white-space: normal;
+    font-size: clamp(1.8rem, 8vw, 3rem);
+    line-height: 1.15;
+    padding: 0.15em 0.35em;
+    text-align: center;
+  }
+
+  /* ── Subtitle: moderate gap from headline ── */
+  .tf-subtitle {
+    margin-top: clamp(1.5rem, 4vh, 2.5rem);
+    font-size: clamp(0.85rem, 3.5vw, 1.1rem);
+    max-width: 30ch;
+  }
+
+  /* ── CTAs: stack vertically, pinned at bottom ── */
+  .tf-cta-row {
+    position: absolute;
+    bottom: clamp(2.5rem, 5vh, 4rem);
+    left: 1.5rem;
+    right: 1.5rem;
+    margin-top: 0;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.7rem;
+    width: auto;
+  }
+
+  .tf-cta-primary,
+  .tf-cta-secondary {
+    width: 100%;
+    max-width: 300px;
+    text-align: center;
+    font-size: 0.8rem;
+    padding: 0.7rem 1.5rem;
+  }
+
+  /* ── Config label: not useful on mobile ── */
+  .tf-config-label {
+    display: none;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   SMALL MOBILE — max-width: 480px
+   ═══════════════════════════════════════════════════════ */
+@media (max-width: 480px) {
+  .tf-logo-svg {
+    width: clamp(200px, 60vw, 280px);
+  }
+
+  .tf-segment {
+    font-size: clamp(1.6rem, 7.5vw, 2.4rem);
+  }
+
+  .tf-subtitle {
+    font-size: 0.85rem;
+    max-width: 28ch;
+    margin-top: clamp(1rem, 3vh, 2rem);
+  }
+}

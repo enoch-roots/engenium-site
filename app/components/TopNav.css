@@ -1,0 +1,246 @@
+/* ═══════════════════════════════════════
+   TOP NAV — Engenium Labs
+   Glass-morphism bar that floats over
+   every page. Transparent at rest,
+   gains backdrop-blur on scroll.
+   ═══════════════════════════════════════ */
+
+/* ── Nav bar ── */
+.tn {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: transparent;
+  transition: background 0.4s ease, box-shadow 0.4s ease, backdrop-filter 0.4s ease;
+}
+
+.tn--scrolled {
+  background: rgba(12, 10, 8, 0.7);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  box-shadow:
+    0 1px 0 rgba(245, 239, 224, 0.04),
+    0 4px 24px rgba(0, 0, 0, 0.3);
+}
+
+/* ── Inner container ── */
+.tn__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 1rem 2rem;
+}
+
+/* ── Logo (keystone + ENGENIUM) ── */
+.tn__logo {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  text-decoration: none;
+  color: var(--warm-linen, #F5EFE0);
+  transition: opacity 0.25s ease;
+}
+
+.tn__logo:hover {
+  opacity: 0.8;
+}
+
+.tn__logo-icon {
+  flex-shrink: 0;
+  opacity: 0.85;
+  transition: opacity 0.25s ease;
+}
+
+.tn__logo:hover .tn__logo-icon {
+  opacity: 1;
+}
+
+.tn__logo-text {
+  font-family: var(--font-cormorant), serif;
+  font-weight: 300;
+  font-size: 1.15rem;
+  letter-spacing: 0.2em;
+  color: var(--warm-linen, #F5EFE0);
+  opacity: 0.9;
+}
+
+/* ── Desktop nav links ── */
+.tn__links {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.tn__link {
+  font-family: var(--font-dm-sans), sans-serif;
+  font-size: 0.82rem;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: var(--warm-linen, #F5EFE0);
+  opacity: 0.5;
+  text-decoration: none;
+  position: relative;
+  padding: 0.25rem 0;
+  transition: opacity 0.25s ease;
+}
+
+.tn__link:hover {
+  opacity: 0.85;
+}
+
+.tn__link--active {
+  opacity: 0.9;
+}
+
+/* Active underline */
+.tn__link--active::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--aged-clay, #A86040);
+  opacity: 0.6;
+}
+
+/* ── CTA button ── */
+.tn__cta {
+  font-family: var(--font-dm-sans), sans-serif;
+  font-size: 0.78rem;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  color: var(--warm-linen, #F5EFE0);
+  text-decoration: none;
+  padding: 0.55rem 1.25rem;
+  border: 1px solid rgba(168, 96, 64, 0.7);
+  border-radius: 6px;
+  background: rgba(168, 96, 64, 0.25);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  white-space: nowrap;
+}
+
+.tn__cta:hover {
+  background: rgba(168, 96, 64, 0.4);
+  border-color: rgba(168, 96, 64, 0.9);
+}
+
+.tn__cta-arrow {
+  font-size: 0.9rem;
+  opacity: 0.6;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.tn__cta:hover .tn__cta-arrow {
+  transform: translateX(2px);
+  opacity: 1;
+}
+
+/* ── Hamburger (mobile only) ── */
+.tn__hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 28px;
+  height: 28px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  z-index: 1010;
+}
+
+.tn__hamburger-line {
+  display: block;
+  width: 100%;
+  height: 1.5px;
+  background: var(--warm-linen, #F5EFE0);
+  opacity: 0.6;
+  border-radius: 1px;
+  transition: all 0.3s ease;
+  transform-origin: center;
+}
+
+/* Animate to X */
+.tn__hamburger--open .tn__hamburger-line:nth-child(1) {
+  transform: translateY(6.5px) rotate(45deg);
+  opacity: 0.9;
+}
+.tn__hamburger--open .tn__hamburger-line:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0);
+}
+.tn__hamburger--open .tn__hamburger-line:nth-child(3) {
+  transform: translateY(-6.5px) rotate(-45deg);
+  opacity: 0.9;
+}
+
+
+/* Old mobile overlay removed — now handled by StaggeredMenu component */
+
+
+/* ═══════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════ */
+
+/* Mobile: hide desktop links, show hamburger */
+@media (max-width: 767px) {
+  .tn__inner {
+    padding: 0.75rem 1.25rem;
+  }
+
+  .tn__links {
+    display: none;
+  }
+
+  /* Hide the CTA on mobile — it lives in the slide-out menu instead */
+  .tn__cta {
+    display: none;
+  }
+
+  .tn__hamburger {
+    display: flex;
+  }
+
+  .tn__logo-icon {
+    width: 22px;
+    height: 22px;
+  }
+
+  .tn__logo-text {
+    font-size: 0.95rem;
+    letter-spacing: 0.16em;
+  }
+}
+
+/* Tablet: tighten spacing */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .tn__links {
+    gap: 1.25rem;
+  }
+
+  .tn__link {
+    font-size: 0.78rem;
+  }
+
+  .tn__cta {
+    font-size: 0.72rem;
+    padding: 0.5rem 1rem;
+  }
+}
+
+/* Large desktop: breathe */
+@media (min-width: 1200px) {
+  .tn__inner {
+    padding: 1.15rem 2.5rem;
+  }
+}

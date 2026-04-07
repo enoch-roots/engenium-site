@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Engenium Labs — TrueFocus Hero</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300;1,400&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --roman-dusk: #171210;
+    --warm-linen: #F5EFE0;
+    --aged-clay: #A86040;
+    --verdigris: #507E78;
+    --roman-dusk-rgb: 23, 18, 16;
+    --warm-linen-rgb: 245, 239, 224;
+    --aged-clay-rgb: 168, 96, 64;
+    --verdigris-rgb: 80, 126, 120;
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html {
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background: var(--roman-dusk);
+    color: var(--warm-linen);
+    overflow: hidden;
+    height: 100vh;
+  }
+
+  /* ═══════════════════════════════════════
+     BACKGROUND — Deep Orb approximation
+     ═══════════════════════════════════════ */
+  .bg {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .bg .mass {
+    position: absolute;
+    width: 140%;
+    height: 140%;
+    top: -20%;
+    left: -20%;
+    border-radius: 50%;
+    background:
+      radial-gradient(
+        ellipse 65% 60% at 52% 48%,
+        rgba(var(--verdigris-rgb), 0.6) 0%,
+        rgba(var(--aged-clay-rgb), 0.3) 30%,
+        rgba(var(--roman-dusk-rgb), 0.9) 55%,
+        rgba(var(--roman-dusk-rgb), 1) 100%
+      );
+    filter: blur(30px) brightness(1.1) contrast(1.15);
+    animation: drift 28s ease-in-out infinite alternate;
+  }
+
+  @keyframes drift {
+    0% { transform: scale(1) rotate(-1deg); }
+    100% { transform: scale(1.04) rotate(2deg); }
+  }
+
+  .bg .clay-wash {
+    position: absolute;
+    width: 55%;
+    height: 70%;
+    bottom: -15%;
+    right: -8%;
+    border-radius: 40% 60% 50% 50%;
+    background: radial-gradient(
+      ellipse at 35% 55%,
+      rgba(var(--aged-clay-rgb), 0.25) 0%,
+      transparent 60%
+    );
+    filter: blur(50px);
+    animation: washDrift 22s ease-in-out infinite alternate;
+  }
+
+  @keyframes washDrift {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(-2%, 3%); }
+  }
+
+  /* grain */
+  .bg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    opacity: 0.45;
+    mix-blend-mode: overlay;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 140px 140px;
+  }
+
+  /* ═══════════════════════════════════════
+     HERO LAYOUT
+     ═══════════════════════════════════════ */
+  .hero {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+  }
+
+  /* ═══════════════════════════════════════
+     WORDMARK (above tagline)
+     ═══════════════════════════════════════ */
+  .wordmark {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: clamp(1.4rem, 3vw, 2.2rem);
+    letter-spacing: -0.01em;
+    margin-bottom: 3rem;
+    opacity: 0.45;
+  }
+
+  .wordmark .labs {
+    font-weight: 600;
+    font-variant: all-small-caps;
+    letter-spacing: 0.42em;
+    font-size: 0.55em;
+    margin-left: 0.12em;
+    vertical-align: 0.08em;
+  }
+
+  /* ═══════════════════════════════════════
+     TRUEFOCUS — the main effect
+     ═══════════════════════════════════════ */
+  .truefocus-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(0.6rem, 2vw, 1.2rem);
+  }
+
+  .truefocus-segment {
+    position: relative;
+    display: inline-block;
+    padding: 0.2em 0.45em;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: clamp(2.8rem, 7.5vw, 6.5rem);
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: var(--warm-linen);
+    transition: filter 0.5s cubic-bezier(0.25, 0.1, 0.25, 1),
+                opacity 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+    cursor: default;
+    white-space: nowrap;
+  }
+
+  /* blurred state */
+  .truefocus-segment.blurred {
+    filter: blur(5px);
+    opacity: 0.35;
+  }
+
+  /* focused state */
+  .truefocus-segment.focused {
+    filter: blur(0px);
+    opacity: 1;
+  }
+
+  /* animated border */
+  .truefocus-segment .border-frame {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    border-radius: 4px;
+  }
+
+  /* Four edges, individually animated */
+  .border-frame .edge {
+    position: absolute;
+    background: var(--aged-clay);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .border-frame .edge-top {
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1) 0s,
+                opacity 0.2s ease;
+  }
+
+  .border-frame .edge-right {
+    top: 0; right: 0; bottom: 0;
+    width: 1px;
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1) 0.1s,
+                opacity 0.2s ease;
+  }
+
+  .border-frame .edge-bottom {
+    bottom: 0; left: 0; right: 0;
+    height: 1px;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1) 0.2s,
+                opacity 0.2s ease;
+  }
+
+  .border-frame .edge-left {
+    top: 0; left: 0; bottom: 0;
+    width: 1px;
+    transform: scaleY(0);
+    transform-origin: bottom;
+    transition: transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1) 0.3s,
+                opacity 0.2s ease;
+  }
+
+  /* when parent is focused, draw the border */
+  .truefocus-segment.focused .edge {
+    opacity: 1;
+  }
+
+  .truefocus-segment.focused .edge-top {
+    transform: scaleX(1);
+  }
+
+  .truefocus-segment.focused .edge-right {
+    transform: scaleY(1);
+  }
+
+  .truefocus-segment.focused .edge-bottom {
+    transform: scaleX(1);
+  }
+
+  .truefocus-segment.focused .edge-left {
+    transform: scaleY(1);
+  }
+
+  /* unfocus — collapse edges */
+  .truefocus-segment.blurred .edge-top,
+  .truefocus-segment.blurred .edge-right,
+  .truefocus-segment.blurred .edge-bottom,
+  .truefocus-segment.blurred .edge-left {
+    transform: scaleX(0);
+    opacity: 0;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+  }
+
+  .truefocus-segment.blurred .edge-left,
+  .truefocus-segment.blurred .edge-right {
+    transform: scaleY(0);
+  }
+
+  /* ═══════════════════════════════════════
+     CORNER DOTS — small square accents
+     ═══════════════════════════════════════ */
+  .border-frame .corner {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: var(--aged-clay);
+    opacity: 0;
+    transition: opacity 0.3s ease 0.35s;
+  }
+
+  .corner-tl { top: -2px; left: -2px; }
+  .corner-tr { top: -2px; right: -2px; }
+  .corner-bl { bottom: -2px; left: -2px; }
+  .corner-br { bottom: -2px; right: -2px; }
+
+  .truefocus-segment.focused .corner {
+    opacity: 1;
+  }
+
+  .truefocus-segment.blurred .corner {
+    opacity: 0;
+    transition: opacity 0.15s ease;
+  }
+
+  /* ═══════════════════════════════════════
+     SUBTITLE
+     ═══════════════════════════════════════ */
+  .subtitle {
+    margin-top: 3rem;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    font-size: clamp(0.85rem, 1.5vw, 1.1rem);
+    letter-spacing: 0.02em;
+    opacity: 0.3;
+    text-align: center;
+    line-height: 1.6;
+  }
+
+  /* ═══════════════════════════════════════
+     CONFIG LABEL
+     ═══════════════════════════════════════ */
+  .config-label {
+    position: fixed;
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 300;
+    font-size: 0.55rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.15;
+    z-index: 20;
+    white-space: nowrap;
+  }
+
+  /* ═══════════════════════════════════════
+     RESPONSIVE
+     ═══════════════════════════════════════ */
+  @media (max-width: 640px) {
+    .truefocus-segment {
+      padding: 0.15em 0.3em;
+    }
+  }
+</style>
+</head>
+
+<body>
+
+<!-- Background -->
+<div class="bg">
+  <div class="mass"></div>
+  <div class="clay-wash"></div>
+</div>
+
+<!-- Hero -->
+<div class="hero">
+
+  <div class="wordmark">Engenium <span class="labs">Labs</span></div>
+
+  <div class="truefocus-container" id="truefocus">
+
+    <div class="truefocus-segment blurred" data-index="0">
+      built to be found.
+      <div class="border-frame">
+        <div class="edge edge-top"></div>
+        <div class="edge edge-right"></div>
+        <div class="edge edge-bottom"></div>
+        <div class="edge edge-left"></div>
+        <div class="corner corner-tl"></div>
+        <div class="corner corner-tr"></div>
+        <div class="corner corner-bl"></div>
+        <div class="corner corner-br"></div>
+      </div>
+    </div>
+
+    <div class="truefocus-segment blurred" data-index="1">
+      by anything that searches.
+      <div class="border-frame">
+        <div class="edge edge-top"></div>
+        <div class="edge edge-right"></div>
+        <div class="edge edge-bottom"></div>
+        <div class="edge edge-left"></div>
+        <div class="corner corner-tl"></div>
+        <div class="corner corner-tr"></div>
+        <div class="corner corner-bl"></div>
+        <div class="corner corner-br"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="subtitle">
+    Where ingenuity meets the generative engine.
+  </div>
+
+</div>
+
+<div class="config-label">TrueFocus &bull; React Bits &bull; Cormorant Garamond 300 &bull; blur 5px &bull; border: Aged Clay &bull; pause 1.8s</div>
+
+<script>
+  // ═══════════════════════════════════════
+  // TrueFocus animation loop
+  // ═══════════════════════════════════════
+  const segments = document.querySelectorAll('.truefocus-segment');
+  const totalSegments = segments.length;
+  let currentIndex = 0;
+  const animationDuration = 500;   // ms — blur/focus transition
+  const pauseBetween = 1800;       // ms — hold on focused segment
+
+  function focusSegment(index) {
+    segments.forEach((seg, i) => {
+      if (i === index) {
+        seg.classList.remove('blurred');
+        seg.classList.add('focused');
+      } else {
+        seg.classList.remove('focused');
+        seg.classList.add('blurred');
+      }
+    });
+  }
+
+  function cycle() {
+    focusSegment(currentIndex);
+    currentIndex = (currentIndex + 1) % totalSegments;
+    setTimeout(cycle, pauseBetween + animationDuration);
+  }
+
+  // Initial delay before first focus
+  setTimeout(() => {
+    cycle();
+  }, 600);
+</script>
+
+</body>
+</html>

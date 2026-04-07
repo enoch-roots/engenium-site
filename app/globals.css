@@ -1,0 +1,743 @@
+@import "tailwindcss";
+
+:root {
+  --roman-dusk: #171210;
+  --warm-linen: #F5EFE0;
+  --aged-clay: #A86040;
+  --verdigris: #507E78;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  background: #0c0a08;
+}
+
+/* Scroll-snap container */
+.scroll-container {
+  height: 100vh;
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Hide scrollbar but keep scrollable */
+.scroll-container::-webkit-scrollbar {
+  display: none;
+}
+.scroll-container {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Each section snaps */
+.hero-section {
+  height: 100vh;
+  width: 100%;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Iframe fills its section seamlessly */
+.hero-section iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: #0c0a08;
+}
+
+/* Nav dots */
+.nav-dots {
+  position: fixed;
+  right: 2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+}
+
+.nav-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(245, 239, 224, 0.15);
+  border: 1px solid rgba(245, 239, 224, 0.2);
+  cursor: pointer;
+  transition: all 0.4s ease;
+  position: relative;
+}
+
+.nav-dot:hover {
+  background: rgba(245, 239, 224, 0.3);
+}
+
+.nav-dot.active {
+  background: var(--verdigris);
+  border-color: var(--verdigris);
+  box-shadow: 0 0 12px rgba(80, 126, 120, 0.4);
+}
+
+/* Section label that appears on hover */
+.nav-dot .dot-label {
+  position: absolute;
+  right: 1.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  white-space: nowrap;
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 0.6rem;
+  font-weight: 300;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(245, 239, 224, 0.5);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.nav-dot:hover .dot-label {
+  opacity: 1;
+}
+
+/* Section counter */
+.section-counter {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 0.65rem;
+  font-weight: 300;
+  letter-spacing: 0.15em;
+  color: rgba(245, 239, 224, 0.25);
+  transition: color 0.4s ease;
+}
+
+/* Keyboard hint */
+.scroll-hint {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 1000;
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 0.55rem;
+  font-weight: 300;
+  letter-spacing: 0.1em;
+  color: rgba(245, 239, 224, 0.15);
+  animation: fadeHint 4s ease-out 3s both;
+}
+
+@keyframes fadeHint {
+  0% { opacity: 0; transform: translateY(8px); }
+  20% { opacity: 1; transform: translateY(0); }
+  80% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* ═══════════════════════════════════════
+   /showcase route — 3 gradient narrative
+   ═══════════════════════════════════════ */
+
+/* ── Global grain layer ── */
+.sc-grain {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  opacity: 0.18;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 160px 160px;
+}
+
+/* ── Scroll container ── */
+.sc-scroll {
+  height: 100vh;
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+.sc-scroll::-webkit-scrollbar { display: none; }
+.sc-scroll { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ── Each section ── */
+.sc-section {
+  height: 100vh;
+  width: 100%;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Gradient background layer */
+.sc-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+/* Dark scrims — per-section, engineered for text readability */
+.sc-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Ember: heavy vignette on all edges, darkest at center-bottom
+   where the headline sits in the Dusk transition zone */
+.sc-scrim-ember {
+  background:
+    radial-gradient(ellipse 70% 55% at 50% 50%, transparent 0%, rgba(12,10,8,0.55) 100%),
+    linear-gradient(to top, rgba(12,10,8,0.6) 0%, transparent 40%),
+    linear-gradient(to bottom, rgba(12,10,8,0.4) 0%, transparent 30%);
+}
+
+/* Signal Flare: bloom lives upper-center — keep that bright.
+   Text sits in the dark lower-left, so scrim the bottom + left. */
+.sc-scrim-signal {
+  background:
+    linear-gradient(to top, rgba(12,10,8,0.75) 0%, rgba(12,10,8,0.3) 35%, transparent 55%),
+    linear-gradient(to right, rgba(12,10,8,0.35) 0%, transparent 50%);
+}
+
+/* Patina Wash: warm Clay upper-right, dark anchor lower-left.
+   Scrim the bottom to create a solid reading base. */
+.sc-scrim-patina {
+  background:
+    linear-gradient(to top, rgba(12,10,8,0.8) 0%, rgba(12,10,8,0.35) 40%, transparent 65%);
+}
+
+/* ── Content layers ── */
+.sc-content {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  pointer-events: auto;
+  user-select: text;
+}
+
+/* Section number label */
+.sc-section-label {
+  position: absolute;
+  z-index: 6;
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 0.55rem;
+  font-weight: 300;
+  letter-spacing: 0.15em;
+  color: rgba(245, 239, 224, 0.12);
+}
+.sc-section-label-left {
+  left: 2rem;
+  top: 50%;
+  transform: translateY(-50%) rotate(-90deg);
+  transform-origin: center center;
+}
+
+/* Shared label (small caps above headlines) */
+.sc-label {
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(245, 239, 224, 0.55);
+  margin-bottom: 1rem;
+}
+
+
+/* ═══════════════════════════════════════
+   SECTION 1 — EMBER DRIFT — THE HOOK
+   Centered, cinematic headline.
+   Text lives in the dark Dusk zone where
+   warm Clay meets cool Verdigris.
+   ═══════════════════════════════════════ */
+
+.sc-content-ember {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+}
+
+.sc-hero-headline {
+  font-family: var(--font-cormorant), serif;
+  font-weight: 300;
+  font-size: clamp(3rem, 9vw, 7.5rem);
+  line-height: 0.95;
+  letter-spacing: -0.01em;
+  color: var(--warm-linen);
+  margin-bottom: 1.5rem;
+  /* Entrance */
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease 0.2s, transform 0.8s ease 0.2s;
+}
+
+.sc-hero-sub {
+  font-family: var(--font-dm-sans), sans-serif;
+  font-weight: 300;
+  font-size: clamp(0.85rem, 2vw, 1.15rem);
+  color: rgba(245, 239, 224, 0.45);
+  letter-spacing: 0.08em;
+  /* Entrance — delayed */
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.7s ease 0.6s, transform 0.7s ease 0.6s;
+}
+
+.sc-active .sc-hero-headline,
+.sc-active .sc-hero-sub {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Ember sub-blocks — secondary headlines below hero */
+.sc-ember-blocks {
+  display: flex;
+  gap: 3rem;
+  margin-top: 2.5rem;
+  max-width: 640px;
+  /* Entrance */
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.7s ease 0.85s, transform 0.7s ease 0.85s;
+}
+
+.sc-active .sc-ember-blocks {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.sc-ember-block-title {
+  font-family: var(--font-cormorant), serif;
+  font-weight: 400;
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  line-height: 1.2;
+  color: var(--warm-linen);
+  margin-bottom: 0.5rem;
+}
+
+.sc-ember-block-body {
+  font-family: var(--font-dm-sans), sans-serif;
+  font-weight: 300;
+  font-size: clamp(0.75rem, 1.2vw, 0.85rem);
+  line-height: 1.6;
+  color: rgba(245, 239, 224, 0.35);
+  max-width: 280px;
+}
+
+@media (max-width: 640px) {
+  .sc-ember-blocks {
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+}
+
+/* Ember label entrance */
+.sc-content-ember .sc-label {
+  margin-bottom: 1rem;
+  opacity: 0;
+  transition: opacity 0.6s ease 0s;
+}
+.sc-active .sc-content-ember .sc-label {
+  opacity: 0.55;
+}
+
+
+/* ═══════════════════════════════════════
+   SECTION 2 — SIGNAL FLARE — THE PHILOSOPHY
+   Left-aligned editorial. Text in the
+   naturally dark lower-left zone. The Clay
+   bloom lives as the visual signal above.
+   ═══════════════════════════════════════ */
+
+.sc-content-signal {
+  justify-content: flex-end;
+  padding: 0 0 12vh 6vw;
+  max-width: 600px;
+}
+
+.sc-signal-headline {
+  font-family: var(--font-cormorant), serif;
+  font-weight: 400;
+  font-size: clamp(2.2rem, 5.5vw, 4rem);
+  line-height: 1.0;
+  letter-spacing: 0.01em;
+  color: var(--warm-linen);
+  margin-bottom: 1.2rem;
+  /* Entrance */
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.8s ease 0.15s, transform 0.8s ease 0.15s;
+}
+
+.sc-signal-body {
+  font-family: var(--font-dm-sans), sans-serif;
+  font-weight: 300;
+  font-size: clamp(0.8rem, 1.5vw, 0.95rem);
+  line-height: 1.7;
+  color: rgba(245, 239, 224, 0.5);
+  max-width: 440px;
+  margin-bottom: 0.8rem;
+  /* Entrance */
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.7s ease 0.4s, transform 0.7s ease 0.4s;
+}
+
+.sc-signal-accent {
+  font-family: var(--font-cormorant), serif;
+  font-weight: 400;
+  font-style: italic;
+  font-size: clamp(1rem, 2vw, 1.3rem);
+  color: var(--aged-clay);
+  letter-spacing: 0.02em;
+  /* Entrance */
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.7s ease 0.65s, transform 0.7s ease 0.65s;
+}
+
+.sc-content-signal .sc-label {
+  /* Entrance */
+  opacity: 0;
+  transition: opacity 0.6s ease 0s;
+}
+
+.sc-active .sc-signal-headline,
+.sc-active .sc-signal-body,
+.sc-active .sc-signal-accent,
+.sc-active .sc-content-signal .sc-label {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Keep label at its designed opacity when active */
+.sc-active .sc-content-signal .sc-label {
+  opacity: 0.55;
+}
+
+/* Second body paragraph — staggered entrance */
+.sc-signal-body--second {
+  margin-top: 0.4rem;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.7s ease 0.85s, transform 0.7s ease 0.85s;
+}
+
+.sc-active .sc-signal-body--second {
+  opacity: 1;
+  transform: translateY(0);
+}
+/* Restore designed opacity (inherits from .sc-signal-body) */
+.sc-active .sc-signal-body--second {
+  opacity: 0.5;
+}
+
+
+/* ═══════════════════════════════════════
+   SECTION 3 — PATINA WASH — THE PARTNERSHIP
+   Lower-left, on the dark anchor. Minimal,
+   confident. The warm Clay field above
+   creates invitation.
+   ═══════════════════════════════════════ */
+
+.sc-content-patina {
+  justify-content: flex-end;
+  padding: 0 0 10vh 6vw;
+}
+
+.sc-patina-headline {
+  font-family: var(--font-cormorant), serif;
+  font-weight: 300;
+  font-size: clamp(1.8rem, 4.5vw, 3.2rem);
+  line-height: 1.1;
+  letter-spacing: 0.02em;
+  color: var(--warm-linen);
+  margin-bottom: 2rem;
+  max-width: 600px;
+  /* Entrance */
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.8s ease 0.15s, transform 0.8s ease 0.15s;
+}
+
+.sc-content-patina .sc-label {
+  margin-bottom: 1.2rem;
+  letter-spacing: 0.22em;
+  /* Entrance */
+  opacity: 0;
+  transition: opacity 0.6s ease 0s;
+}
+
+.sc-patina-footer {
+  max-width: 380px;
+  /* Entrance */
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.7s ease 0.45s, transform 0.7s ease 0.45s;
+}
+
+.sc-rule {
+  width: 40px;
+  height: 1px;
+  background: rgba(245, 239, 224, 0.15);
+  margin-bottom: 1rem;
+}
+
+.sc-patina-cta {
+  font-family: var(--font-dm-sans), sans-serif;
+  font-weight: 400;
+  font-size: clamp(0.85rem, 1.5vw, 1rem);
+  color: rgba(245, 239, 224, 0.55);
+  line-height: 1.6;
+  margin-bottom: 0.8rem;
+}
+
+.sc-patina-url {
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  color: var(--verdigris);
+}
+
+.sc-patina-accent {
+  font-family: var(--font-cormorant), serif;
+  font-weight: 400;
+  font-style: italic;
+  font-size: clamp(1rem, 2vw, 1.3rem);
+  color: var(--aged-clay);
+  letter-spacing: 0.02em;
+  margin-top: 0.6rem;
+}
+
+.sc-active .sc-patina-headline,
+.sc-active .sc-patina-footer {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.sc-active .sc-content-patina .sc-label {
+  opacity: 0.55;
+}
+
+
+/* ═══════════════════════════════════════
+   NAV + CHROME
+   ═══════════════════════════════════════ */
+
+/* Right-rail nav dots */
+.sc-nav {
+  position: fixed;
+  right: 2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+}
+
+.sc-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(245, 239, 224, 0.12);
+  border: 1px solid rgba(245, 239, 224, 0.15);
+  cursor: pointer;
+  transition: all 0.4s ease;
+  padding: 0;
+}
+
+.sc-dot:hover {
+  background: rgba(245, 239, 224, 0.3);
+}
+
+.sc-dot.active {
+  background: var(--verdigris);
+  border-color: var(--verdigris);
+  box-shadow: 0 0 10px rgba(80, 126, 120, 0.35);
+}
+
+/* Scroll hint */
+.sc-hint {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 0.55rem;
+  font-weight: 300;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(245, 239, 224, 0.12);
+  animation: fadeHint 4s ease-out 2s both;
+}
+
+
+/* ═══════════════════════════════════════
+   LANDING PAGE — scroll-snap sections
+   ═══════════════════════════════════════ */
+
+.landing-scroll {
+  height: 100vh;
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+.landing-scroll::-webkit-scrollbar { display: none; }
+.landing-scroll { -ms-overflow-style: none; scrollbar-width: none; }
+
+.landing-section {
+  height: 100vh;
+  width: 100%;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  position: relative;
+  overflow: hidden;
+}
+
+
+/* ═══════════════════════════════════════
+   GRADIENT BLINDS — keyframes
+   ═══════════════════════════════════════ */
+
+@keyframes gbFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 0.9; }
+}
+
+@keyframes gbFadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes nightDrift {
+  0%   { transform: perspective(800px) rotateX(55deg) translateX(-2%); }
+  100% { transform: perspective(800px) rotateX(55deg) translateX(2%); }
+}
+
+
+/* ═══════════════════════════════════════
+   MAGNET LINES — keyframes
+   ═══════════════════════════════════════ */
+
+@keyframes mlNightDrift {
+  0%   { transform: perspective(800px) rotateX(50deg) rotateZ(-10deg) translateY(0); }
+  100% { transform: perspective(800px) rotateX(50deg) rotateZ(-10deg) translateY(-3%); }
+}
+
+@keyframes mlCtaPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.5; transform: scale(0.7); }
+}
+
+
+/* ═══════════════════════════════════════
+   CUBES HERO — card glow pulse
+   ═══════════════════════════════════════ */
+
+@keyframes cubeCardGlow {
+  0%, 100% {
+    box-shadow:
+      0 0 20px rgba(80,126,120,0.08),
+      0 0 50px rgba(80,126,120,0.04),
+      inset 0 0 30px rgba(23,18,16,0.4);
+    border-color: rgba(80,126,120,0.2);
+  }
+  50% {
+    box-shadow:
+      0 0 35px rgba(80,126,120,0.16),
+      0 0 70px rgba(80,126,120,0.07),
+      inset 0 0 30px rgba(23,18,16,0.3);
+    border-color: rgba(80,126,120,0.38);
+  }
+}
+
+.cube-card-glow {
+  animation: cubeCardGlow 6s ease-in-out infinite;
+}
+
+
+/* ═══════════════════════════════════════
+   PAGE ENTRANCE ANIMATIONS
+   Reusable fade-up classes for inner pages
+   ═══════════════════════════════════════ */
+
+@keyframes pageFadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pageFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.anim-fade-up {
+  opacity: 0;
+  animation: pageFadeUp 0.8s ease-out forwards;
+}
+
+.anim-fade-up-d1 {
+  opacity: 0;
+  animation: pageFadeUp 0.8s ease-out 0.15s forwards;
+}
+
+.anim-fade-up-d2 {
+  opacity: 0;
+  animation: pageFadeUp 0.8s ease-out 0.3s forwards;
+}
+
+.anim-fade-up-d3 {
+  opacity: 0;
+  animation: pageFadeUp 0.7s ease-out 0.5s forwards;
+}
+
+.anim-fade-up-d4 {
+  opacity: 0;
+  animation: pageFadeUp 0.7s ease-out 0.7s forwards;
+}
+
+.anim-fade-in-d2 {
+  opacity: 0;
+  animation: pageFadeIn 1s ease-out 0.3s forwards;
+}
+
+
+/* ═══════════════════════════════════════
+   GLOBAL MOBILE — shared hero overrides
+   ═══════════════════════════════════════ */
+
+@media (max-width: 768px) {
+  /* Hide "Built by Engenium Labs …" tech footers on all heroes */
+  .hero-config-label,
+  .tf-config-label,
+  .ml-config-label {
+    display: none !important;
+  }
+}

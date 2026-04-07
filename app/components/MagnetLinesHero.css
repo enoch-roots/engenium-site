@@ -1,0 +1,135 @@
+/* ═══════════════════════════════════════════════════════
+   MagnetLinesHero — Mobile overrides
+
+   Desktop uses inline styles (two-column grid).
+   These rules kick in at ≤ 768 px and switch to a
+   single-column, vertically-stacked layout.
+   ═══════════════════════════════════════════════════════ */
+
+/* ── TABLET / MOBILE — max-width: 768px ─────────────── */
+@media (max-width: 768px) {
+
+  /* ── Layout: single column, stacked ── */
+  .ml-hero {
+    grid-template-columns: 1fr !important;
+    gap: 2rem !important;
+    padding: 5rem 1.5rem 6rem !important;
+    min-height: 100vh !important;
+    align-content: center !important;
+  }
+
+  /* ── Copy: center-align everything ── */
+  .ml-hero-copy {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .ml-headline {
+    font-size: clamp(2.2rem, 8vw, 3.2rem) !important;
+    text-align: center;
+  }
+
+  .ml-body {
+    font-size: 0.95rem !important;
+    max-width: 34ch !important;
+    text-align: center;
+  }
+
+  /* ── Capability tags: tighter, smaller pills ── */
+  .ml-cap-row {
+    justify-content: center !important;
+    gap: 0.35rem !important;
+    margin-bottom: 1.5rem !important;
+  }
+
+  .ml-cap-label {
+    font-size: 0.55rem !important;
+    padding: 0.25rem 0.55rem !important;
+    border-color: rgba(80, 126, 120, 0.25) !important;
+    color: rgba(245, 239, 224, 0.45) !important;
+  }
+
+  /* ── CTAs: compact inline pair on one row ── */
+  .ml-cta-row {
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0.6rem !important;
+    width: 100%;
+    flex-wrap: nowrap !important;
+  }
+
+  .ml-cta-primary {
+    padding: 0.55rem 1.2rem !important;
+    font-size: 0.72rem !important;
+    border-color: rgba(168, 96, 64, 0.35) !important;
+    white-space: nowrap;
+  }
+
+  .ml-cta-secondary {
+    padding: 0.55rem 0.8rem !important;
+    font-size: 0.72rem !important;
+    white-space: nowrap;
+  }
+
+  /* ── Visual: shrink + center below copy, add breathing room ── */
+  .ml-hero-visual {
+    order: 2;
+    margin-top: 4.5rem;
+  }
+
+  .ml-magnet-wrapper {
+    width: clamp(280px, 75vw, 380px) !important;
+    height: clamp(280px, 75vw, 380px) !important;
+    margin: 0 auto;
+  }
+
+  .ml-phase-label {
+    font-size: 0.85rem !important;
+    top: -2.5rem !important;
+  }
+
+  /* ── Config label: hide on mobile (overlaps content) ── */
+  .ml-config-label {
+    display: none !important;
+  }
+}
+
+/* ── SMALL MOBILE — max-width: 480px ────────────────── */
+@media (max-width: 480px) {
+
+  .ml-hero {
+    padding: 4rem 1.25rem 5rem !important;
+  }
+
+  .ml-headline {
+    font-size: clamp(1.8rem, 7.5vw, 2.6rem) !important;
+  }
+
+  .ml-body {
+    font-size: 0.85rem !important;
+    max-width: 30ch !important;
+  }
+
+  .ml-magnet-wrapper {
+    width: clamp(240px, 70vw, 320px) !important;
+    height: clamp(240px, 70vw, 320px) !important;
+  }
+
+  .ml-cap-label {
+    font-size: 0.5rem !important;
+    padding: 0.2rem 0.4rem !important;
+  }
+
+  .ml-cta-primary {
+    padding: 0.5rem 1rem !important;
+    font-size: 0.65rem !important;
+  }
+
+  .ml-cta-secondary {
+    padding: 0.5rem 0.6rem !important;
+    font-size: 0.65rem !important;
+  }
+}

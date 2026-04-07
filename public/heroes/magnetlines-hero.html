@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Engenium Labs — MagnetLines Hero</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300;1,400&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --roman-dusk: #171210;
+    --warm-linen: #F5EFE0;
+    --aged-clay: #A86040;
+    --verdigris: #507E78;
+    --roman-dusk-rgb: 23, 18, 16;
+    --warm-linen-rgb: 245, 239, 224;
+    --aged-clay-rgb: 168, 96, 64;
+    --verdigris-rgb: 80, 126, 120;
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html {
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background: #0e0c0a;
+    color: var(--warm-linen);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ═══════════════════════════════════════
+     GRAIN
+     ═══════════════════════════════════════ */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    opacity: 0.4;
+    mix-blend-mode: overlay;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 140px 140px;
+  }
+
+  /* ═══════════════════════════════════════
+     NIGHTY NIGHT BACKGROUND
+     ═══════════════════════════════════════ */
+  .bg-nighty {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .bg-nighty .plane {
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    bottom: -80%;
+    left: -50%;
+    background:
+      linear-gradient(
+        -60deg,
+        rgba(var(--roman-dusk-rgb), 1) 0%,
+        rgba(var(--roman-dusk-rgb), 0.98) 25%,
+        rgba(var(--verdigris-rgb), 0.2) 45%,
+        rgba(var(--aged-clay-rgb), 0.12) 60%,
+        rgba(var(--roman-dusk-rgb), 1) 80%
+      );
+    transform: perspective(800px) rotateX(50deg) rotateZ(-10deg);
+    transform-origin: center center;
+    animation: nightDrift 40s linear infinite;
+    filter: blur(2px) brightness(0.85);
+  }
+
+  @keyframes nightDrift {
+    0% { transform: perspective(800px) rotateX(50deg) rotateZ(-10deg) translateY(0); }
+    100% { transform: perspective(800px) rotateX(50deg) rotateZ(-10deg) translateY(-3%); }
+  }
+
+  .bg-nighty .horizon-glow {
+    position: absolute;
+    width: 100%;
+    height: 40%;
+    bottom: 25%;
+    left: 0;
+    background: linear-gradient(
+      to top,
+      transparent 0%,
+      rgba(var(--verdigris-rgb), 0.06) 40%,
+      rgba(var(--aged-clay-rgb), 0.04) 60%,
+      transparent 100%
+    );
+    filter: blur(40px);
+  }
+
+  /* ═══════════════════════════════════════
+     LAYOUT
+     ═══════════════════════════════════════ */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    padding: 4rem;
+    gap: 4rem;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  @media (max-width: 900px) {
+    .hero {
+      grid-template-columns: 1fr;
+      padding: 3rem 1.5rem;
+      gap: 3rem;
+    }
+    .hero-copy { order: 2; text-align: center; }
+    .hero-visual { order: 1; }
+  }
+
+  /* ═══════════════════════════════════════
+     COPY SIDE
+     ═══════════════════════════════════════ */
+  .hero-copy {
+    position: relative;
+    z-index: 10;
+  }
+
+  .hero-copy .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 300;
+    font-size: 0.65rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--aged-clay);
+    opacity: 0.7;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-copy h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: clamp(2.6rem, 5vw, 4.2rem);
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-copy h1 em {
+    font-style: italic;
+    color: var(--aged-clay);
+  }
+
+  .hero-copy h1 .line2 {
+    display: block;
+    color: rgba(var(--warm-linen-rgb), 0.55);
+  }
+
+  .hero-copy .body {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    max-width: 38ch;
+    opacity: 0.45;
+    margin-bottom: 2.5rem;
+  }
+
+  .hero-copy .cta-row {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  @media (max-width: 900px) {
+    .hero-copy .cta-row { justify-content: center; }
+    .hero-copy .body { margin-left: auto; margin-right: auto; }
+  }
+
+  .cta-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem 2rem;
+    border: 1px solid rgba(var(--aged-clay-rgb), 0.5);
+    background: transparent;
+    color: var(--warm-linen);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 400;
+    font-size: 0.85rem;
+    letter-spacing: 0.03em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .cta-primary:hover {
+    background: rgba(var(--aged-clay-rgb), 0.12);
+    border-color: var(--aged-clay);
+  }
+
+  .cta-primary .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--aged-clay);
+    animation: ctaPulse 2s ease-in-out infinite;
+  }
+
+  @keyframes ctaPulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.7); }
+  }
+
+  .cta-secondary {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.8rem 1.5rem;
+    border: none;
+    background: transparent;
+    color: rgba(var(--warm-linen-rgb), 0.35);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    font-size: 0.85rem;
+    letter-spacing: 0.03em;
+    cursor: pointer;
+    transition: color 0.3s ease;
+  }
+
+  .cta-secondary:hover {
+    color: rgba(var(--warm-linen-rgb), 0.65);
+  }
+
+  /* ═══════════════════════════════════════
+     VISUAL SIDE — MagnetLines container
+     ═══════════════════════════════════════ */
+  .hero-visual {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    z-index: 10;
+  }
+
+  .magnet-wrapper {
+    position: relative;
+    width: clamp(280px, 40vmin, 480px);
+    height: clamp(280px, 40vmin, 480px);
+  }
+
+  .magnet-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border: 1px solid rgba(var(--verdigris-rgb), 0.12);
+    border-radius: 8px;
+    overflow: hidden;
+    background: rgba(var(--roman-dusk-rgb), 0.6);
+  }
+
+  /* The grid of lines */
+  .magnet-grid {
+    display: grid;
+    width: 100%;
+    height: 100%;
+    padding: 8px;
+  }
+
+  .magnet-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .magnet-line {
+    width: 2px;
+    height: 24px;
+    background: var(--verdigris);
+    border-radius: 1px;
+    transition: none;
+    will-change: transform;
+    opacity: 0.6;
+  }
+
+  /* The animated dot */
+  .magnet-dot {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--aged-clay);
+    z-index: 20;
+    pointer-events: none;
+    box-shadow:
+      0 0 20px rgba(var(--aged-clay-rgb), 0.5),
+      0 0 60px rgba(var(--aged-clay-rgb), 0.2);
+    transition: box-shadow 0.5s ease;
+  }
+
+  /* Dot trail / glow that intensifies at center */
+  .magnet-dot::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle,
+      rgba(var(--aged-clay-rgb), 0.25) 0%,
+      transparent 70%
+    );
+    pointer-events: none;
+  }
+
+  .magnet-dot.centered {
+    box-shadow:
+      0 0 30px rgba(var(--aged-clay-rgb), 0.7),
+      0 0 80px rgba(var(--aged-clay-rgb), 0.35),
+      0 0 120px rgba(var(--aged-clay-rgb), 0.15);
+  }
+
+  /* Label beneath the grid */
+  .magnet-label {
+    position: absolute;
+    bottom: -2.5rem;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 300;
+    font-size: 0.55rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    opacity: 0.2;
+  }
+
+  /* ═══════════════════════════════════════
+     PHASE INDICATOR
+     ═══════════════════════════════════════ */
+  .phase-label {
+    position: absolute;
+    top: -2rem;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 300;
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    color: var(--aged-clay);
+  }
+
+  .phase-label.visible {
+    opacity: 0.5;
+  }
+</style>
+</head>
+
+<body>
+
+<!-- Nighty Night Background -->
+<div class="bg-nighty">
+  <div class="plane"></div>
+  <div class="horizon-glow"></div>
+</div>
+
+<div class="hero">
+
+  <!-- COPY -->
+  <div class="hero-copy">
+    <div class="eyebrow">Full-Stack Digital Systems</div>
+    <h1>
+      Built to be found.<br>
+      By <em>everything</em><br>
+      that searches.
+    </h1>
+    <p class="body">
+      We build the systems, write the content, and engineer the visibility that puts your business in front of buyers — whether they're clicking results or asking an AI what to hire.
+    </p>
+    <div class="cta-row">
+      <button class="cta-primary"><span class="dot"></span> See where you stand</button>
+      <button class="cta-secondary">How it works →</button>
+    </div>
+  </div>
+
+  <!-- VISUAL -->
+  <div class="hero-visual">
+    <div class="magnet-wrapper">
+      <div class="phase-label" id="phaseLabel">converging</div>
+      <div class="magnet-container">
+        <div class="magnet-grid" id="magnetGrid"></div>
+      </div>
+      <div class="magnet-dot" id="magnetDot"></div>
+      <div class="magnet-label">12 × 10 &bull; Verdigris lines &bull; Clay attractor</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // ═══════════════════════════════════════
+  // CONFIG
+  // ═══════════════════════════════════════
+  const ROWS = 10;
+  const COLS = 12;
+  const LINE_HEIGHT = 24;
+
+  const grid = document.getElementById('magnetGrid');
+  const dot = document.getElementById('magnetDot');
+  const phaseLabel = document.getElementById('phaseLabel');
+
+  grid.style.gridTemplateColumns = `repeat(${COLS}, 1fr)`;
+  grid.style.gridTemplateRows = `repeat(${ROWS}, 1fr)`;
+
+  // Build grid cells
+  const lines = [];
+  for (let r = 0; r < ROWS; r++) {
+    for (let c = 0; c < COLS; c++) {
+      const cell = document.createElement('div');
+      cell.className = 'magnet-cell';
+      const line = document.createElement('div');
+      line.className = 'magnet-line';
+      cell.appendChild(line);
+      grid.appendChild(cell);
+      lines.push({ el: line, row: r, col: c });
+    }
+  }
+
+  // ═══════════════════════════════════════
+  // DOT ANIMATION PATH
+  // ═══════════════════════════════════════
+  // The dot starts outside, orbits loosely,
+  // spirals inward to center, holds, then
+  // drifts back out. Continuous loop.
+
+  const container = grid.parentElement;
+  let containerRect;
+  let centerX, centerY;
+  let animStartTime;
+
+  function updateRect() {
+    containerRect = container.getBoundingClientRect();
+    centerX = containerRect.left + containerRect.width / 2;
+    centerY = containerRect.top + containerRect.height / 2;
+  }
+
+  updateRect();
+  window.addEventListener('resize', updateRect);
+
+  // Animation phases (total cycle ~10s)
+  // Phase 1: Orbit outside (0–3s)
+  // Phase 2: Spiral inward (3–5.5s)
+  // Phase 3: Hold at center (5.5–8s)
+  // Phase 4: Drift outward (8–10s)
+
+  const CYCLE_DURATION = 10000; // ms
+
+  function easeInOutCubic(t) {
+    return t < 0.5
+      ? 4 * t * t * t
+      : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  }
+
+  function easeOutQuart(t) {
+    return 1 - Math.pow(1 - t, 4);
+  }
+
+  function easeInQuad(t) {
+    return t * t;
+  }
+
+  function getDotPosition(time) {
+    const t = (time % CYCLE_DURATION) / CYCLE_DURATION; // 0–1 normalized
+    const w = containerRect.width;
+    const h = containerRect.height;
+
+    // Radius of orbit (relative to container size)
+    const outerRadius = Math.max(w, h) * 0.75;
+    const angle = time * 0.0008; // slow continuous rotation
+
+    let x, y, phase;
+
+    if (t < 0.30) {
+      // Phase 1: Orbit outside
+      phase = 'searching';
+      const orbitT = t / 0.30;
+      const r = outerRadius * (0.8 + 0.2 * Math.sin(orbitT * Math.PI));
+      x = centerX + Math.cos(angle) * r;
+      y = centerY + Math.sin(angle) * r;
+
+    } else if (t < 0.55) {
+      // Phase 2: Spiral inward
+      phase = 'converging';
+      const spiralT = (t - 0.30) / 0.25;
+      const eased = easeInOutCubic(spiralT);
+      const r = outerRadius * (1 - eased) * 0.8;
+      const spiralAngle = angle + spiralT * Math.PI * 2.5;
+      x = centerX + Math.cos(spiralAngle) * r;
+      y = centerY + Math.sin(spiralAngle) * r;
+
+    } else if (t < 0.80) {
+      // Phase 3: Hold at center (with tiny breathing)
+      phase = 'found';
+      const holdT = (t - 0.55) / 0.25;
+      const breathe = Math.sin(holdT * Math.PI * 3) * 4;
+      x = centerX + breathe * Math.cos(angle * 2);
+      y = centerY + breathe * Math.sin(angle * 2);
+
+    } else {
+      // Phase 4: Drift outward
+      phase = 'searching';
+      const exitT = (t - 0.80) / 0.20;
+      const eased = easeInQuad(exitT);
+      const r = outerRadius * eased * 0.85;
+      const exitAngle = angle + Math.PI;
+      x = centerX + Math.cos(exitAngle) * r;
+      y = centerY + Math.sin(exitAngle) * r;
+    }
+
+    return { x, y, phase };
+  }
+
+  // ═══════════════════════════════════════
+  // LINE ROTATION CALC
+  // ═══════════════════════════════════════
+  function updateLines(dotX, dotY) {
+    for (const item of lines) {
+      const cellEl = item.el.parentElement;
+      const rect = cellEl.getBoundingClientRect();
+      const cellCenterX = rect.left + rect.width / 2;
+      const cellCenterY = rect.top + rect.height / 2;
+
+      const dx = dotX - cellCenterX;
+      const dy = dotY - cellCenterY;
+      const angle = Math.atan2(dy, dx) * (180 / Math.PI);
+
+      // Distance-based opacity
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      const maxDist = Math.max(containerRect.width, containerRect.height) * 1.2;
+      const proximity = 1 - Math.min(dist / maxDist, 1);
+      const opacity = 0.2 + proximity * 0.7;
+
+      item.el.style.transform = `rotate(${angle}deg)`;
+      item.el.style.opacity = opacity;
+    }
+  }
+
+  // ═══════════════════════════════════════
+  // RENDER LOOP
+  // ═══════════════════════════════════════
+  let lastPhase = '';
+
+  function animate(timestamp) {
+    if (!animStartTime) animStartTime = timestamp;
+    const elapsed = timestamp - animStartTime;
+
+    updateRect();
+    const { x, y, phase } = getDotPosition(elapsed);
+
+    // Position the dot
+    dot.style.left = (x - containerRect.left - 5) + 'px';
+    dot.style.top = (y - containerRect.top - 5) + 'px';
+
+    // Centered glow effect
+    if (phase === 'found') {
+      dot.classList.add('centered');
+    } else {
+      dot.classList.remove('centered');
+    }
+
+    // Phase label
+    if (phase !== lastPhase) {
+      phaseLabel.textContent = phase;
+      phaseLabel.classList.add('visible');
+      lastPhase = phase;
+      if (phase === 'searching') {
+        setTimeout(() => phaseLabel.classList.remove('visible'), 1200);
+      }
+    }
+    if (phase === 'found' || phase === 'converging') {
+      phaseLabel.classList.add('visible');
+    }
+
+    // Update line rotations
+    updateLines(x, y);
+
+    requestAnimationFrame(animate);
+  }
+
+  requestAnimationFrame(animate);
+</script>
+
+</body>
+</html>

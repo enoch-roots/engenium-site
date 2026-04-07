@@ -1,0 +1,98 @@
+/* ═══════════════════════════════════════
+   FOOTER — Engenium Labs
+   Minimal, quiet. Sits at the bottom
+   of every page's scroll content.
+   ═══════════════════════════════════════ */
+
+.site-footer {
+  position: relative;
+  width: 100%;
+  padding: 0 clamp(1.5rem, 5vw, 3rem);
+}
+
+/* Thin rule above */
+.site-footer__rule {
+  width: 100%;
+  max-width: 64rem;
+  height: 1px;
+  margin: 0 auto;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(245, 239, 224, 0.08) 20%,
+    rgba(245, 239, 224, 0.08) 80%,
+    transparent
+  );
+}
+
+.site-footer__inner {
+  max-width: 64rem;
+  margin: 0 auto;
+  padding: 2.5rem 0 3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* ── Brand lockup ── */
+.site-footer__brand {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  text-decoration: none;
+  color: var(--warm-linen, #F5EFE0);
+  opacity: 0.4;
+  transition: opacity 0.3s ease;
+}
+
+.site-footer__brand:hover {
+  opacity: 0.65;
+}
+
+.site-footer__mark {
+  flex-shrink: 0;
+}
+
+.site-footer__wordmark {
+  font-family: var(--font-cormorant), serif;
+  font-weight: 300;
+  font-size: 0.85rem;
+  letter-spacing: 0.2em;
+}
+
+/* ── Tagline ── */
+.site-footer__tagline {
+  font-family: var(--font-dm-sans), sans-serif;
+  font-weight: 300;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  color: var(--warm-linen, #F5EFE0);
+  opacity: 0.2;
+  text-align: center;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ── Legal ── */
+.site-footer__legal {
+  font-family: var(--font-jetbrains), monospace;
+  font-weight: 300;
+  font-size: 0.55rem;
+  letter-spacing: 0.1em;
+  color: var(--warm-linen, #F5EFE0);
+  opacity: 0.12;
+  text-align: center;
+  margin: 0.5rem 0 0;
+}
+
+/* ── Mobile ── */
+@media (max-width: 767px) {
+  .site-footer__inner {
+    padding: 2rem 0 2.5rem;
+  }
+
+  .site-footer__tagline {
+    font-size: 0.72rem;
+  }
+}

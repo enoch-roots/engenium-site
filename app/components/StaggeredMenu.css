@@ -1,0 +1,306 @@
+/* ═══════════════════════════════════════
+   STAGGERED MENU — Engenium Labs
+   CSS-driven open/close with GSAP stagger
+   enhancement for item entrances.
+   ═══════════════════════════════════════ */
+
+/* ── Wrapper ── */
+.staggered-menu-wrapper {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.staggered-menu-wrapper[data-open] {
+  pointer-events: auto;
+  visibility: visible;
+}
+
+/* ── Backdrop ── */
+.sm-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(12, 10, 8, 0.6);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.staggered-menu-wrapper[data-open] .sm-backdrop {
+  opacity: 1;
+}
+
+/* ── Pre-layers (colour wipes) ── */
+.sm-prelayers {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.sm-prelayer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 100%;
+  transform: translateX(100%);
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.staggered-menu-wrapper[data-open] .sm-prelayer {
+  transform: translateX(0);
+}
+
+/* ── Main panel — CSS transition drives open/close ── */
+.staggered-menu-panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(12, 10, 8, 0.97);
+  backdrop-filter: blur(24px) saturate(130%);
+  -webkit-backdrop-filter: blur(24px) saturate(130%);
+  display: flex;
+  flex-direction: column;
+  padding: 5.5rem 2rem 2.5rem;
+  overflow-y: auto;
+  z-index: 10;
+  pointer-events: auto;
+  transform: translateX(100%);
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+.staggered-menu-wrapper[data-open] .staggered-menu-panel {
+  transform: translateX(0);
+}
+
+/* Close transition (faster) */
+.staggered-menu-wrapper:not([data-open]) .staggered-menu-panel {
+  transition: transform 0.3s cubic-bezier(0.55, 0, 1, 0.45);
+}
+
+.staggered-menu-wrapper:not([data-open]) .sm-prelayer {
+  transition: transform 0.25s cubic-bezier(0.55, 0, 1, 0.45);
+  transition-delay: 0s !important;
+}
+
+/* ── Panel inner layout ── */
+.sm-panel-inner {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Menu item list ── */
+.sm-panel-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+/* Separator line between items */
+.sm-panel-itemWrap + .sm-panel-itemWrap {
+  border-top: 1px solid rgba(245, 239, 224, 0.06);
+}
+
+.sm-panel-itemWrap {
+  position: relative;
+  overflow: hidden;
+  line-height: 1;
+}
+
+/* ── Menu item link ── */
+.sm-panel-item {
+  position: relative;
+  font-family: var(--font-jetbrains), monospace;
+  font-weight: 300;
+  font-size: clamp(1.4rem, 5.5vw, 2rem);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: var(--warm-linen, #F5EFE0);
+  opacity: 0.55;
+  cursor: pointer;
+  display: block;
+  text-decoration: none;
+  padding: 0.65rem 0;
+  transition: opacity 0.3s ease, color 0.3s ease;
+}
+
+.sm-panel-item:hover,
+.sm-panel-item:focus-visible {
+  opacity: 1;
+  color: var(--aged-clay, #A86040);
+}
+
+.sm-panel-item--active {
+  opacity: 0.9;
+  color: var(--aged-clay, #A86040);
+}
+
+.sm-panel-itemLabel {
+  display: inline-block;
+  will-change: transform;
+  transform-origin: 50% 100%;
+}
+
+/* ── Item numbering — right-aligned ── */
+.sm-panel-list[data-numbering] {
+  counter-reset: smItem;
+}
+
+.sm-panel-list[data-numbering] .sm-panel-item {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.sm-panel-list[data-numbering] .sm-panel-item::after {
+  counter-increment: smItem;
+  content: counter(smItem, decimal-leading-zero);
+  flex-shrink: 0;
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 0.6rem;
+  font-weight: 300;
+  letter-spacing: 0.1em;
+  color: var(--verdigris, #507E78);
+  pointer-events: none;
+  user-select: none;
+  opacity: var(--sm-num-opacity, 1);
+}
+
+/* ── CTA button — anchored to bottom ── */
+.sm-cta-btn {
+  font-family: var(--font-dm-sans), sans-serif;
+  font-size: 0.88rem;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  color: var(--warm-linen, #F5EFE0);
+  padding: 0.75rem 1.5rem;
+  border: 1px solid rgba(168, 96, 64, 0.5);
+  border-radius: 6px;
+  background: rgba(168, 96, 64, 0.12);
+  cursor: pointer;
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+.sm-cta-btn:hover {
+  background: rgba(168, 96, 64, 0.25);
+  border-color: rgba(168, 96, 64, 0.7);
+}
+
+.sm-cta-arrow {
+  font-size: 0.95rem;
+  opacity: 0.6;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.sm-cta-btn:hover .sm-cta-arrow {
+  transform: translateX(3px);
+  opacity: 1;
+}
+
+/* ── Social links ── */
+.sm-socials {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(245, 239, 224, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.sm-socials-title {
+  margin: 0;
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 0.6rem;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--verdigris, #507E78);
+  opacity: 0.7;
+}
+
+.sm-socials-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.sm-socials-link {
+  font-family: var(--font-dm-sans), sans-serif;
+  font-size: 0.85rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  color: var(--warm-linen, #F5EFE0);
+  opacity: 0.45;
+  text-decoration: none;
+  position: relative;
+  padding: 2px 0;
+  display: inline-block;
+  transition: color 0.3s ease, opacity 0.3s ease;
+}
+
+.sm-socials-link:hover {
+  color: var(--aged-clay, #A86040);
+  opacity: 1;
+}
+
+.sm-socials-link:focus-visible {
+  outline: 2px solid var(--verdigris, #507E78);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Dim siblings on hover */
+.sm-socials-list:hover .sm-socials-link {
+  opacity: 0.25;
+}
+.sm-socials-list:hover .sm-socials-link:hover {
+  opacity: 1;
+}
+
+/* ── Thin accent border at left edge ── */
+.staggered-menu-panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    transparent 5%,
+    rgba(80, 126, 120, 0.2) 30%,
+    rgba(168, 96, 64, 0.15) 70%,
+    transparent 95%
+  );
+}
+
+/* ── Desktop: hide entirely ── */
+@media (min-width: 768px) {
+  .staggered-menu-wrapper {
+    display: none !important;
+  }
+}

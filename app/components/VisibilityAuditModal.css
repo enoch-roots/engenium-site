@@ -1,0 +1,487 @@
+/* ═══════════════════════════════════════
+   VISIBILITY AUDIT MODAL
+   Two-step intake form. Matches Engenium
+   visual language: warm linen on dark,
+   Aged Clay accents, glass-morphism.
+   ═══════════════════════════════════════ */
+
+/* ── Backdrop ── */
+.vam {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  visibility: hidden;
+  padding: 1.5rem;
+}
+
+.vam--open {
+  pointer-events: auto;
+  visibility: visible;
+}
+
+.vam__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(12, 10, 8, 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.vam--open .vam__backdrop {
+  opacity: 1;
+}
+
+/* ── Panel ── */
+.vam__panel {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  background: rgba(23, 18, 16, 0.92);
+  backdrop-filter: blur(24px) saturate(130%);
+  -webkit-backdrop-filter: blur(24px) saturate(130%);
+  border: 1px solid rgba(245, 239, 224, 0.06);
+  border-radius: 12px;
+  padding: 2.5rem 2.25rem 2rem;
+  transform: translateY(24px) scale(0.97);
+  opacity: 0;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.35s ease;
+}
+
+.vam--open .vam__panel {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+
+/* ── Close button ── */
+.vam__close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 32px;
+  height: 32px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--warm-linen, #F5EFE0);
+  opacity: 0.3;
+  transition: opacity 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.vam__close:hover {
+  opacity: 0.7;
+}
+
+.vam__close svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* ── Step indicator ── */
+.vam__steps {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.75rem;
+}
+
+.vam__step-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(245, 239, 224, 0.12);
+  border: 1px solid rgba(245, 239, 224, 0.15);
+  transition: all 0.3s ease;
+}
+
+.vam__step-dot--active {
+  background: var(--verdigris, #507E78);
+  border-color: var(--verdigris, #507E78);
+  box-shadow: 0 0 8px rgba(80, 126, 120, 0.3);
+}
+
+.vam__step-dot--done {
+  background: var(--aged-clay, #A86040);
+  border-color: var(--aged-clay, #A86040);
+  box-shadow: 0 0 6px rgba(168, 96, 64, 0.25);
+}
+
+.vam__step-line {
+  width: 24px;
+  height: 1px;
+  background: rgba(245, 239, 224, 0.08);
+  transition: background 0.3s ease;
+}
+
+.vam__step-line--done {
+  background: rgba(168, 96, 64, 0.35);
+}
+
+/* ── Typography ── */
+.vam__label {
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 0.65rem;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(245, 239, 224, 0.4);
+  margin-bottom: 0.5rem;
+}
+
+.vam__title {
+  font-family: var(--font-cormorant), serif;
+  font-weight: 300;
+  font-size: clamp(1.6rem, 3.5vw, 2rem);
+  line-height: 1.1;
+  color: var(--warm-linen, #F5EFE0);
+  margin-bottom: 0.6rem;
+}
+
+.vam__subtitle {
+  font-family: var(--font-dm-sans), sans-serif;
+  font-weight: 300;
+  font-size: 0.85rem;
+  line-height: 1.55;
+  color: rgba(245, 239, 224, 0.4);
+  margin-bottom: 2rem;
+}
+
+/* ── Form fields ── */
+.vam__field {
+  margin-bottom: 1.25rem;
+}
+
+.vam__field-label {
+  display: block;
+  font-family: var(--font-dm-sans), sans-serif;
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  color: rgba(245, 239, 224, 0.55);
+  margin-bottom: 0.4rem;
+}
+
+.vam__input {
+  width: 100%;
+  padding: 0.7rem 0.9rem;
+  background: rgba(245, 239, 224, 0.04);
+  border: 1px solid rgba(245, 239, 224, 0.08);
+  border-radius: 6px;
+  color: var(--warm-linen, #F5EFE0);
+  font-family: var(--font-dm-sans), sans-serif;
+  font-size: 0.88rem;
+  font-weight: 300;
+  outline: none;
+  transition: border-color 0.25s ease, background 0.25s ease;
+}
+
+.vam__input::placeholder {
+  color: rgba(245, 239, 224, 0.2);
+}
+
+.vam__input:focus {
+  border-color: rgba(80, 126, 120, 0.4);
+  background: rgba(245, 239, 224, 0.06);
+}
+
+.vam__textarea {
+  resize: vertical;
+  min-height: 80px;
+  max-height: 160px;
+}
+
+/* ── Checkbox ── */
+.vam__checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 1.25rem;
+  cursor: pointer;
+}
+
+.vam__checkbox {
+  width: 16px;
+  height: 16px;
+  border: 1px solid rgba(245, 239, 224, 0.15);
+  border-radius: 3px;
+  background: rgba(245, 239, 224, 0.04);
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.vam__checkbox:checked {
+  background: rgba(168, 96, 64, 0.35);
+  border-color: var(--aged-clay, #A86040);
+}
+
+.vam__checkbox:checked::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 5px;
+  width: 4px;
+  height: 8px;
+  border: solid var(--warm-linen, #F5EFE0);
+  border-width: 0 1.5px 1.5px 0;
+  transform: rotate(45deg);
+  opacity: 0.9;
+}
+
+.vam__checkbox-label {
+  font-family: var(--font-dm-sans), sans-serif;
+  font-size: 0.82rem;
+  font-weight: 300;
+  color: rgba(245, 239, 224, 0.45);
+  user-select: none;
+}
+
+/* ── Submit button ── */
+/* Default: muted, not yet ready */
+.vam__submit {
+  width: 100%;
+  padding: 0.75rem 1.5rem;
+  background: rgba(245, 239, 224, 0.04);
+  border: 1px solid rgba(245, 239, 224, 0.1);
+  border-radius: 6px;
+  color: rgba(245, 239, 224, 0.3);
+  font-family: var(--font-dm-sans), sans-serif;
+  font-size: 0.88rem;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: all 0.35s ease;
+  margin-top: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+/* Ready: validation passed — light up with Clay */
+.vam__submit--ready {
+  background: rgba(168, 96, 64, 0.25);
+  border-color: rgba(168, 96, 64, 0.6);
+  color: var(--warm-linen, #F5EFE0);
+  cursor: pointer;
+}
+
+.vam__submit--ready:hover {
+  background: rgba(168, 96, 64, 0.4);
+  border-color: rgba(168, 96, 64, 0.9);
+}
+
+/* Submitting: disabled while request is in flight */
+.vam__submit--busy {
+  opacity: 0.5;
+  cursor: wait;
+}
+
+.vam__submit-arrow {
+  font-size: 0.95rem;
+  opacity: 0.4;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.vam__submit--ready .vam__submit-arrow {
+  opacity: 0.6;
+}
+
+.vam__submit--ready:hover .vam__submit-arrow {
+  transform: translateX(2px);
+  opacity: 1;
+}
+
+/* ── Skip link (step 2) ── */
+.vam__skip {
+  display: block;
+  text-align: center;
+  margin-top: 1rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-dm-sans), sans-serif;
+  font-size: 0.75rem;
+  font-weight: 300;
+  color: rgba(245, 239, 224, 0.25);
+  transition: color 0.2s ease;
+  padding: 0.5rem;
+  width: 100%;
+}
+
+.vam__skip:hover {
+  color: rgba(245, 239, 224, 0.5);
+}
+
+/* ── Success state ── */
+.vam__success {
+  text-align: center;
+  padding: 1rem 0;
+}
+
+.vam__success-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(80, 126, 120, 0.15);
+  border: 1px solid rgba(80, 126, 120, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+  color: var(--verdigris, #507E78);
+}
+
+.vam__success-title {
+  font-family: var(--font-cormorant), serif;
+  font-weight: 300;
+  font-size: 1.6rem;
+  color: var(--warm-linen, #F5EFE0);
+  margin-bottom: 0.6rem;
+}
+
+.vam__success-body {
+  font-family: var(--font-dm-sans), sans-serif;
+  font-weight: 300;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: rgba(245, 239, 224, 0.45);
+  max-width: 340px;
+  margin: 0 auto;
+}
+
+.vam__success-email {
+  color: var(--aged-clay, #A86040);
+  font-weight: 400;
+}
+
+/* ── Field errors ── */
+.vam__input--error {
+  border-color: rgba(192, 72, 56, 0.5);
+  background: rgba(192, 72, 56, 0.04);
+}
+
+.vam__input--error:focus {
+  border-color: rgba(192, 72, 56, 0.7);
+  background: rgba(192, 72, 56, 0.06);
+}
+
+.vam__error {
+  display: block;
+  font-family: var(--font-dm-sans), sans-serif;
+  font-size: 0.72rem;
+  font-weight: 400;
+  color: rgba(210, 90, 70, 0.85);
+  margin-top: 0.3rem;
+  padding-left: 0.1rem;
+  animation: vamErrorIn 0.2s ease-out;
+}
+
+@keyframes vamErrorIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Submit-level error (API / network failures) ── */
+.vam__submit-error {
+  font-family: var(--font-dm-sans), sans-serif;
+  font-size: 0.78rem;
+  font-weight: 400;
+  color: rgba(210, 90, 70, 0.9);
+  background: rgba(210, 90, 70, 0.06);
+  border: 1px solid rgba(210, 90, 70, 0.15);
+  border-radius: 6px;
+  padding: 0.6rem 0.8rem;
+  margin-bottom: 0.75rem;
+  text-align: center;
+  animation: vamErrorIn 0.25s ease-out;
+}
+
+/* ── Step content transitions ── */
+.vam__step-content {
+  animation: vamFadeIn 0.35s ease-out;
+}
+
+@keyframes vamFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Optional badge (step 2 fields) ── */
+.vam__optional {
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(245, 239, 224, 0.2);
+  margin-left: 0.4rem;
+}
+
+/* ── Select dropdown ── */
+.vam__select {
+  width: 100%;
+  padding: 0.7rem 0.9rem;
+  background: rgba(245, 239, 224, 0.04);
+  border: 1px solid rgba(245, 239, 224, 0.08);
+  border-radius: 6px;
+  color: var(--warm-linen, #F5EFE0);
+  font-family: var(--font-dm-sans), sans-serif;
+  font-size: 0.88rem;
+  font-weight: 300;
+  outline: none;
+  transition: border-color 0.25s ease, background 0.25s ease;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='rgba(245,239,224,0.3)' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.9rem center;
+  padding-right: 2.5rem;
+}
+
+.vam__select:focus {
+  border-color: rgba(80, 126, 120, 0.4);
+  background-color: rgba(245, 239, 224, 0.06);
+}
+
+.vam__select option {
+  background: #171210;
+  color: #F5EFE0;
+}
+
+/* ── Responsive ── */
+@media (max-width: 480px) {
+  .vam__panel {
+    padding: 2rem 1.5rem 1.5rem;
+    border-radius: 10px;
+  }
+
+  .vam__title {
+    font-size: 1.5rem;
+  }
+}
