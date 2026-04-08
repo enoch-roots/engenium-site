@@ -9,17 +9,17 @@ import {
   Suspense,
 } from "react";
 
-const GradientCanvas = lazy(() => import("./GradientCanvas"));
+const GradientCanvas = lazy(() => import("../how-we-work/GradientCanvas"));
 
 /* ──────────────────────────────────────────────────
-   3 curated gradients — Ember Drift, Signal Flare,
-   Patina Wash — each paired with a How We Work
-   messaging beat: Process, Philosophy, Partnership.
+   3 curated gradients — each paired with an About
+   messaging beat: Identity + Etymology, Values,
+   Austin + CTA.
    ────────────────────────────────────────────────── */
 
 const SECTIONS = [
   {
-    id: "ember-drift",
+    id: "about-origin",
     gradient: {
       animate: "on",
       type: "plane",
@@ -29,7 +29,7 @@ const SECTIONS = [
       color3: "#171210",
       uStrength: 2.5,
       uDensity: 1.0,
-      uSpeed: 0.3,
+      uSpeed: 0.25,
       uFrequency: 5.5,
       uAmplitude: 1,
       rotationX: 0,
@@ -47,7 +47,7 @@ const SECTIONS = [
     },
   },
   {
-    id: "signal-flare",
+    id: "about-values",
     gradient: {
       animate: "on",
       type: "plane",
@@ -57,7 +57,7 @@ const SECTIONS = [
       color3: "#171210",
       uStrength: 5,
       uDensity: 1.8,
-      uSpeed: 0.2,
+      uSpeed: 0.15,
       uFrequency: 5.5,
       uAmplitude: 1,
       rotationX: 0,
@@ -75,7 +75,7 @@ const SECTIONS = [
     },
   },
   {
-    id: "patina-wash",
+    id: "about-austin",
     gradient: {
       animate: "on",
       type: "plane",
@@ -85,7 +85,7 @@ const SECTIONS = [
       color3: "#171210",
       uStrength: 2,
       uDensity: 1.3,
-      uSpeed: 0.4,
+      uSpeed: 0.35,
       uFrequency: 5.5,
       uAmplitude: 1,
       rotationX: 0,
@@ -104,11 +104,9 @@ const SECTIONS = [
   },
 ] as const;
 
-export default function ShowcasePage() {
+export default function AboutPage() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
-  /* Only mount ShaderGradient for the active section to avoid
-     running 3 concurrent Three.js WebGL renderers. */
   const [clientReady, setClientReady] = useState(false);
 
   useEffect(() => {
@@ -171,12 +169,12 @@ export default function ShowcasePage() {
 
   return (
     <>
-      {/* Film-grain overlay — sits on top of everything */}
+      {/* Film-grain overlay */}
       <div className="sc-grain" />
 
       {/* Scroll-snap container */}
       <div ref={scrollRef} className="sc-scroll">
-        {/* ─── Section 1: The Process ─── */}
+        {/* ─── Section 1: The Identity + Etymology ─── */}
         <section
           className={`sc-section sc-ember${activeIndex === 0 ? " sc-active" : ""}`}
           data-index={0}
@@ -188,38 +186,80 @@ export default function ShowcasePage() {
               </Suspense>
             )}
           </div>
-          <div className="sc-scrim sc-scrim-ember" />
-          <div className="sc-content sc-content-ember">
-            <span className="sc-label">The Process</span>
-            <h1 className="sc-hero-headline">
-              Discovery first.
-            </h1>
-            <p className="sc-hero-sub">We listen before we build.</p>
-            <div className="sc-ember-blocks">
-              <div className="sc-ember-block">
-                <h3 className="sc-ember-block-title">
-                  Build in weeks, not months.
-                </h3>
-                <p className="sc-ember-block-body">
-                  Core infrastructure goes live fast. We scope tight, ship, and
-                  iterate with real data, not assumptions.
-                </p>
+          <div className="sc-scrim ab-scrim-dict" />
+          <div className="sc-content ab-content-origin">
+            <div className="ab-dict-card">
+              {/* Headword */}
+              <h1 className="ab-dict-headword">engenium</h1>
+              <p className="ab-dict-phonetic">/en&middot;JEN&middot;ee&middot;um/</p>
+
+              {/* Origin line */}
+              <div className="ab-dict-origin">
+                <span className="ab-dict-origin-label">origin</span>
+                <span className="ab-dict-origin-text">
+                  Latin <em>ingenium</em>&thinsp;&mdash;&thinsp;<em>in-</em>{" "}
+                  (inborn, within) + <em>gen-</em> (to beget, to produce, to
+                  bring forth)
+                </span>
               </div>
-              <div className="sc-ember-block">
-                <h3 className="sc-ember-block-title">
-                  Custom from the ground up.
-                </h3>
-                <p className="sc-ember-block-body">
-                  No templates, no page builders. Every system is shaped around
-                  what we learn in discovery.
-                </p>
+
+              <div className="ab-dict-rule" />
+
+              {/* Definitions */}
+              <div className="ab-dict-defs">
+                <div className="ab-dict-def">
+                  <span className="ab-dict-def-num">1</span>
+                  <div>
+                    <p className="ab-dict-def-text">
+                      Inborn generative power. The capacity to produce from
+                      within.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="ab-dict-def">
+                  <span className="ab-dict-def-num">2</span>
+                  <div>
+                    <p className="ab-dict-def-text">
+                      The direct ancestor of both <em>engine</em> and{" "}
+                      <em>ingenuity</em>. The word that means the generating
+                      generator&thinsp;&mdash;&thinsp;not redundant, but
+                      resonant.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="ab-dict-def">
+                  <span className="ab-dict-def-num">3</span>
+                  <div>
+                    <p className="ab-dict-def-text">
+                      A digital systems agency that builds infrastructure for
+                      the generative era. Austin, TX.
+                    </p>
+                    <p className="ab-dict-usage">
+                      &ldquo;The engine and the generative were always the same
+                      word.&rdquo;
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="ab-dict-rule" />
+
+              {/* See also */}
+              <div className="ab-dict-seealso">
+                <span className="ab-dict-seealso-label">see also</span>
+                <span className="ab-dict-seealso-words">
+                  genesis, genius, genuine, ingenious, engineer, generate,
+                  progeny
+                </span>
               </div>
             </div>
           </div>
           <div className="sc-section-label sc-section-label-left">01</div>
         </section>
 
-        {/* ─── Section 2: The Philosophy ─── */}
+        {/* ─── Section 2: The Values ─── */}
         <section
           className={`sc-section sc-signal${activeIndex === 1 ? " sc-active" : ""}`}
           data-index={1}
@@ -232,28 +272,47 @@ export default function ShowcasePage() {
             )}
           </div>
           <div className="sc-scrim sc-scrim-signal" />
-          <div className="sc-content sc-content-signal">
-            <span className="sc-label">The Philosophy</span>
-            <h2 className="sc-signal-headline">
-              Systems,
+          <div className="sc-content ab-content-values">
+            <span className="sc-label">The Values</span>
+            <h2 className="ab-values-headline">
+              Four values.
               <br />
-              not services.
+              One root.
             </h2>
-            <p className="sc-signal-body">
-              We build you a customized digital foundation that supports your
-              business now and in the future.
-            </p>
-            <p className="sc-signal-accent">Infrastructure that compounds.</p>
-            <p className="sc-signal-body sc-signal-body--second">
-              If the analytics aren&apos;t connected to the CRM, the CRM
-              isn&apos;t connected to the site, and the site isn&apos;t
-              capturing intent, it&apos;s not done yet.
-            </p>
+            <div className="ab-values-grid">
+              <div className="ab-value">
+                <h3 className="ab-value-title">Ingenious</h3>
+                <p className="ab-value-body">
+                  Every build has at least one thing we thought through harder
+                  than anyone else would have.
+                </p>
+              </div>
+              <div className="ab-value">
+                <h3 className="ab-value-title">Genuine</h3>
+                <p className="ab-value-body">
+                  A family business. Real names. Clients talk to the people
+                  doing the work.
+                </p>
+              </div>
+              <div className="ab-value">
+                <h3 className="ab-value-title">Generative</h3>
+                <p className="ab-value-body">
+                  We build things that compound. A website is infrastructure. An
+                  automation is leverage.
+                </p>
+              </div>
+              <div className="ab-value">
+                <h3 className="ab-value-title">Grounded</h3>
+                <p className="ab-value-body">
+                  Low ego, high competence. We do the work and show the results.
+                </p>
+              </div>
+            </div>
           </div>
           <div className="sc-section-label sc-section-label-left">02</div>
         </section>
 
-        {/* ─── Section 3: The Partnership ─── */}
+        {/* ─── Section 3: Austin + CTA ─── */}
         <section
           className={`sc-section sc-patina${activeIndex === 2 ? " sc-active" : ""}`}
           data-index={2}
@@ -266,21 +325,22 @@ export default function ShowcasePage() {
             )}
           </div>
           <div className="sc-scrim sc-scrim-patina" />
-          <div className="sc-content sc-content-patina">
-            <span className="sc-label">The Partnership</span>
-            <h2 className="sc-patina-headline">
-              You get a team,
+          <div className="sc-content ab-content-austin">
+            <span className="sc-label">Austin, Texas</span>
+            <h2 className="ab-austin-headline">
+              Three people. Real names.
               <br />
-              not a ticket queue.
+              We answer the phone.
             </h2>
-            <div className="sc-patina-footer">
+            <div className="ab-austin-footer">
               <div className="sc-rule" />
-              <p className="sc-patina-cta">
-                Your dashboard. Your data. Your domain. We build on
-                infrastructure you own.
+              <p className="ab-austin-body">
+                Based in Austin, Texas. We work with businesses here first, by
+                choice&thinsp;&mdash;&thinsp;because local relationships and
+                trust matter more to us than scale.
               </p>
-              <p className="sc-patina-accent">
-                Built to hand off. Designed to keep.
+              <p className="ab-austin-accent">
+                Built to be found. By everything that searches.
               </p>
             </div>
           </div>

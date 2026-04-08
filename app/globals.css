@@ -253,15 +253,22 @@ html, body {
   transform-origin: center center;
 }
 
-/* Shared label (small caps above headlines) */
+/* Shared label (small caps above headlines) — pill style */
 .sc-label {
   font-family: var(--font-jetbrains), monospace;
-  font-size: 0.75rem;
+  font-size: 0.65rem;
   font-weight: 400;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: rgba(245, 239, 224, 0.55);
+  color: var(--warm-linen);
   margin-bottom: 1rem;
+  display: inline-block;
+  width: fit-content;
+  padding: 0.3rem 0.85rem;
+  border: 1px solid rgba(245, 239, 224, 0.25);
+  border-radius: 999px;
+  background: rgba(245, 239, 224, 0.08);
+  align-self: flex-start;
 }
 
 
@@ -297,7 +304,7 @@ html, body {
   font-family: var(--font-dm-sans), sans-serif;
   font-weight: 300;
   font-size: clamp(0.85rem, 2vw, 1.15rem);
-  color: rgba(245, 239, 224, 0.45);
+  color: rgba(245, 239, 224, 0.6);
   letter-spacing: 0.08em;
   /* Entrance — delayed */
   opacity: 0;
@@ -328,6 +335,15 @@ html, body {
   transform: translateY(0);
 }
 
+.sc-ember-block {
+  background: rgba(23, 18, 16, 0.5);
+  border: 1px solid rgba(245, 239, 224, 0.1);
+  border-radius: 8px;
+  padding: 1.25rem 1.4rem;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
 .sc-ember-block-title {
   font-family: var(--font-cormorant), serif;
   font-weight: 400;
@@ -342,7 +358,7 @@ html, body {
   font-weight: 300;
   font-size: clamp(0.75rem, 1.2vw, 0.85rem);
   line-height: 1.6;
-  color: rgba(245, 239, 224, 0.35);
+  color: rgba(245, 239, 224, 0.6);
   max-width: 280px;
 }
 
@@ -356,6 +372,7 @@ html, body {
 
 /* Ember label entrance */
 .sc-content-ember .sc-label {
+  align-self: center;
   margin-bottom: 1rem;
   opacity: 0;
   transition: opacity 0.6s ease 0s;
@@ -540,6 +557,365 @@ html, body {
 
 .sc-active .sc-content-patina .sc-label {
   opacity: 0.55;
+}
+
+
+/* ═══════════════════════════════════════
+   ABOUT PAGE — SECTION 1: DICTIONARY ENTRY
+   A typographic card styled like a real
+   dictionary/lexicon page. Left-aligned,
+   scholarly, earned authority.
+   ═══════════════════════════════════════ */
+
+/* Light scrim — lets the gradient breathe behind the card */
+.ab-scrim-dict {
+  background:
+    radial-gradient(ellipse 80% 70% at 50% 50%, rgba(12,10,8,0.35) 0%, rgba(12,10,8,0.5) 100%);
+}
+
+.ab-content-origin {
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+/* ── The card itself ── */
+.ab-dict-card {
+  background: rgba(23, 18, 16, 0.72);
+  border: 1px solid rgba(245, 239, 224, 0.12);
+  border-radius: 8px;
+  padding: clamp(2rem, 4vw, 3.5rem) clamp(2rem, 5vw, 4rem);
+  max-width: 580px;
+  width: 100%;
+  text-align: left;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  /* Entrance */
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.8s ease 0.15s, transform 0.8s ease 0.15s;
+}
+
+.sc-active .ab-dict-card {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Headword ── */
+.ab-dict-headword {
+  font-family: var(--font-cormorant), serif;
+  font-weight: 300;
+  font-size: clamp(2.8rem, 7vw, 4.5rem);
+  line-height: 1;
+  letter-spacing: -0.01em;
+  color: var(--warm-linen);
+  margin-bottom: 0.35rem;
+}
+
+/* ── Phonetic ── */
+.ab-dict-phonetic {
+  font-family: var(--font-dm-sans), sans-serif;
+  font-weight: 300;
+  font-size: clamp(0.85rem, 1.5vw, 1rem);
+  color: rgba(245, 239, 224, 0.6);
+  letter-spacing: 0.06em;
+  margin-bottom: 1rem;
+}
+
+/* ── Origin line ── */
+.ab-dict-origin {
+  display: flex;
+  gap: 0.75rem;
+  align-items: baseline;
+  margin-bottom: 1.25rem;
+}
+
+.ab-dict-origin-label {
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 0.65rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--verdigris);
+  flex-shrink: 0;
+}
+
+.ab-dict-origin-text {
+  font-family: var(--font-dm-sans), sans-serif;
+  font-weight: 300;
+  font-size: clamp(0.8rem, 1.3vw, 0.9rem);
+  line-height: 1.5;
+  color: rgba(245, 239, 224, 0.7);
+}
+
+.ab-dict-origin-text em {
+  font-style: italic;
+  color: var(--aged-clay);
+}
+
+/* ── Divider rules ── */
+.ab-dict-rule {
+  width: 100%;
+  height: 1px;
+  background: rgba(245, 239, 224, 0.15);
+  margin: 1.25rem 0;
+}
+
+/* ── Definitions ── */
+.ab-dict-defs {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.ab-dict-def {
+  display: flex;
+  gap: 0.85rem;
+  align-items: baseline;
+}
+
+.ab-dict-def-num {
+  font-family: var(--font-cormorant), serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--aged-clay);
+  flex-shrink: 0;
+  min-width: 1rem;
+  text-align: right;
+}
+
+.ab-dict-def-text {
+  font-family: var(--font-dm-sans), sans-serif;
+  font-weight: 400;
+  font-size: clamp(0.85rem, 1.3vw, 0.95rem);
+  line-height: 1.6;
+  color: rgba(245, 239, 224, 0.85);
+}
+
+.ab-dict-def-text em {
+  font-style: italic;
+  color: var(--aged-clay);
+}
+
+/* ── Usage example (italic quote) ── */
+.ab-dict-usage {
+  font-family: var(--font-cormorant), serif;
+  font-weight: 400;
+  font-style: italic;
+  font-size: clamp(0.9rem, 1.4vw, 1.05rem);
+  line-height: 1.5;
+  color: rgba(245, 239, 224, 0.55);
+  margin-top: 0.4rem;
+}
+
+/* ── See also ── */
+.ab-dict-seealso {
+  display: flex;
+  gap: 0.75rem;
+  align-items: baseline;
+  flex-wrap: wrap;
+}
+
+.ab-dict-seealso-label {
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 0.65rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--verdigris);
+  flex-shrink: 0;
+}
+
+.ab-dict-seealso-words {
+  font-family: var(--font-dm-sans), sans-serif;
+  font-weight: 300;
+  font-style: italic;
+  font-size: clamp(0.8rem, 1.2vw, 0.88rem);
+  color: rgba(245, 239, 224, 0.55);
+  line-height: 1.5;
+}
+
+@media (max-width: 640px) {
+  .ab-dict-card {
+    padding: 1.75rem 1.5rem;
+  }
+  .ab-dict-origin {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  .ab-dict-seealso {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+}
+
+
+/* ═══════════════════════════════════════
+   ABOUT PAGE — SECTION 2: THE VALUES
+   Four values in a grid, left-aligned
+   editorial in the dark lower-left zone.
+   ═══════════════════════════════════════ */
+
+.ab-content-values {
+  justify-content: flex-end;
+  padding: 0 0 10vh 6vw;
+  max-width: 640px;
+}
+
+.ab-values-headline {
+  font-family: var(--font-cormorant), serif;
+  font-weight: 400;
+  font-size: clamp(2.2rem, 5.5vw, 4rem);
+  line-height: 1.0;
+  letter-spacing: 0.01em;
+  color: var(--warm-linen);
+  margin-bottom: 2rem;
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.8s ease 0.15s, transform 0.8s ease 0.15s;
+}
+
+.ab-values-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem 2.5rem;
+  margin-bottom: 1.5rem;
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.7s ease 0.4s, transform 0.7s ease 0.4s;
+}
+
+.ab-value-title {
+  font-family: var(--font-cormorant), serif;
+  font-weight: 600;
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  line-height: 1.2;
+  color: var(--warm-linen);
+  margin-bottom: 0.35rem;
+}
+
+.ab-value-body {
+  font-family: var(--font-dm-sans), sans-serif;
+  font-weight: 300;
+  font-size: clamp(0.75rem, 1.2vw, 0.85rem);
+  line-height: 1.6;
+  color: rgba(245, 239, 224, 0.4);
+  max-width: 260px;
+}
+
+.ab-values-accent {
+  font-family: var(--font-cormorant), serif;
+  font-weight: 400;
+  font-style: italic;
+  font-size: clamp(1rem, 2vw, 1.3rem);
+  color: var(--aged-clay);
+  letter-spacing: 0.02em;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.7s ease 0.65s, transform 0.7s ease 0.65s;
+}
+
+.ab-content-values .sc-label {
+  opacity: 0;
+  transition: opacity 0.6s ease 0s;
+}
+
+.sc-active .ab-values-headline,
+.sc-active .ab-values-grid,
+.sc-active .ab-values-accent,
+.sc-active .ab-content-values .sc-label {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.sc-active .ab-content-values .sc-label {
+  opacity: 0.55;
+}
+
+@media (max-width: 640px) {
+  .ab-values-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+  .ab-content-values {
+    padding: 0 2rem 8vh 2rem;
+  }
+}
+
+
+/* ═══════════════════════════════════════
+   ABOUT PAGE — SECTION 3: AUSTIN + CTA
+   Lower-left, on the dark anchor.
+   Minimal, confident — same energy as
+   the Patina Wash partnership section.
+   ═══════════════════════════════════════ */
+
+.ab-content-austin {
+  justify-content: flex-end;
+  padding: 0 0 10vh 6vw;
+}
+
+.ab-austin-headline {
+  font-family: var(--font-cormorant), serif;
+  font-weight: 300;
+  font-size: clamp(1.8rem, 4.5vw, 3.2rem);
+  line-height: 1.1;
+  letter-spacing: 0.02em;
+  color: var(--warm-linen);
+  margin-bottom: 2rem;
+  max-width: 600px;
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.8s ease 0.15s, transform 0.8s ease 0.15s;
+}
+
+.ab-content-austin .sc-label {
+  margin-bottom: 1.2rem;
+  letter-spacing: 0.22em;
+  opacity: 0;
+  transition: opacity 0.6s ease 0s;
+}
+
+.ab-austin-footer {
+  max-width: 380px;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.7s ease 0.45s, transform 0.7s ease 0.45s;
+}
+
+.ab-austin-body {
+  font-family: var(--font-dm-sans), sans-serif;
+  font-weight: 400;
+  font-size: clamp(0.85rem, 1.5vw, 1rem);
+  color: rgba(245, 239, 224, 0.55);
+  line-height: 1.6;
+  margin-bottom: 0.8rem;
+}
+
+.ab-austin-accent {
+  font-family: var(--font-cormorant), serif;
+  font-weight: 400;
+  font-style: italic;
+  font-size: clamp(1rem, 2vw, 1.3rem);
+  color: var(--aged-clay);
+  letter-spacing: 0.02em;
+  margin-top: 0.6rem;
+}
+
+.sc-active .ab-austin-headline,
+.sc-active .ab-austin-footer {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.sc-active .ab-content-austin .sc-label {
+  opacity: 0.55;
+}
+
+@media (max-width: 640px) {
+  .ab-content-austin {
+    padding: 0 2rem 8vh 2rem;
+  }
 }
 
 
