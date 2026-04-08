@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useCallback } from "react";
 import dynamic from "next/dynamic";
 import { useOpenAudit } from "../components/AuditModalContext";
 import Footer from "../components/Footer";
@@ -12,8 +13,19 @@ const MagicBento = dynamic(() => import("../components/MagicBento"), {
   ssr: false,
 });
 
+const ServiceHub = dynamic(() => import("../components/ServiceHub"), {
+  ssr: false,
+});
+
 export default function ServicesPage() {
   const openAudit = useOpenAudit();
+  const [openCardId, setOpenCardId] = useState<string | null>(null);
+
+  /* Hub node click → open the pop-out */
+  const handleNodeClick = useCallback((id: string, _index: number) => {
+    setOpenCardId((prev) => (prev === id ? null : id));
+  }, []);
+
   return (
     <div
       className="relative w-full bg-[#0c0a08]"
@@ -49,63 +61,30 @@ export default function ServicesPage() {
 
       {/* ── Page content (scrollable) ── */}
       <div className="relative z-10">
-        {/* Hero */}
-        <div
-          className="flex flex-col items-center justify-center text-center"
-          style={{
-            paddingTop: "clamp(5.5rem, 12vh, 8rem)",
-            paddingBottom: "clamp(2rem, 4vh, 3rem)",
-            paddingLeft: "clamp(2.5rem, 8vw, 6rem)",
-            paddingRight: "clamp(2.5rem, 8vw, 6rem)",
-          }}
-        >
-          <h1
-            className="anim-fade-up"
-            style={{
-              fontFamily: "var(--font-cormorant), serif",
-              fontWeight: 300,
-              fontSize: "clamp(2.8rem, 7vw, 5.5rem)",
-              lineHeight: 0.95,
-              letterSpacing: "-0.01em",
-              color: "var(--warm-linen)",
-              marginBottom: "1rem",
-            }}
-          >
-            Services
-          </h1>
 
-          <p
-            className="max-w-xl anim-fade-up-d1"
-            style={{
-              fontFamily: "var(--font-dm-sans), sans-serif",
-              fontWeight: 300,
-              fontSize: "clamp(0.9rem, 1.5vw, 1.1rem)",
-              color: "var(--verdigris)",
-              letterSpacing: "0.06em",
-              lineHeight: 1.6,
-            }}
-          >
-            Strategy, systems, and digital infrastructure
-            engineered to compound.
-          </p>
-        </div>
+        {/* ── Hero + Hub (two-column on desktop) ── */}
+        <ServiceHub onNodeClick={handleNodeClick} />
 
-        {/* Service cards */}
+        {/* ── Service cards (accordion) ── */}
         <div className="anim-fade-up-d2" style={{ paddingBottom: "clamp(3rem, 6vh, 5rem)" }}>
-          <MagicBento />
+          <MagicBento
+            modalCardId={openCardId}
+            onCloseModal={() => setOpenCardId(null)}
+          />
         </div>
 
-        {/* CTA */}
+        {/* ── CTA ── */}
         <div
           className="flex flex-col items-center text-center anim-fade-up-d3"
           style={{ paddingBottom: "clamp(5rem, 12vh, 8rem)", paddingLeft: "clamp(2.5rem, 8vw, 6rem)", paddingRight: "clamp(2.5rem, 8vw, 6rem)" }}
         >
           <p
             style={{
-              fontFamily: "var(--font-cormorant), serif",
+              fontFamily: "var(--font-jetbrains), monospace",
               fontWeight: 300,
-              fontSize: "clamp(1.6rem, 3.5vw, 2.4rem)",
-              lineHeight: 1.15,
+              fontSize: "clamp(1.3rem, 3vw, 1.9rem)",
+              lineHeight: 1.2,
+              letterSpacing: "-0.02em",
               color: "var(--warm-linen)",
               marginBottom: "0.6rem",
               maxWidth: "36rem",
