@@ -677,7 +677,7 @@ export default function CubesHero({ active = true }: CubesHeroProps) {
             See the full stack
           </a>
           <a
-            href="/process"
+            href="/how-we-work"
             style={styles.ctaSecondary}
             onMouseEnter={(e) => {
               e.currentTarget.style.color = "rgba(245,239,224,0.6)";
