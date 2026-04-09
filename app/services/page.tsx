@@ -28,7 +28,7 @@ export default function ServicesPage() {
 
   return (
     <div
-      className="relative w-full bg-[#0c0a08]"
+      className="relative w-full bg-[#0c0a08] no-scrollbar"
       style={{ minHeight: "100vh", overflowY: "auto", height: "100vh" }}
     >
       {/* ── ColorBends background (fixed, fills viewport) ── */}
@@ -60,7 +60,7 @@ export default function ServicesPage() {
       />
 
       {/* ── Page content (scrollable) ── */}
-      <div className="relative z-10">
+      <div className="relative z-10" style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
 
         {/* ── Hero + Hub (two-column on desktop) ── */}
         <ServiceHub onNodeClick={handleNodeClick} />
@@ -76,7 +76,7 @@ export default function ServicesPage() {
         {/* ── CTA ── */}
         <div
           className="flex flex-col items-center text-center anim-fade-up-d3"
-          style={{ paddingBottom: "clamp(5rem, 12vh, 8rem)", paddingLeft: "clamp(2.5rem, 8vw, 6rem)", paddingRight: "clamp(2.5rem, 8vw, 6rem)" }}
+          style={{ paddingBottom: "clamp(5rem, 12vh, 8rem)", paddingLeft: "clamp(1.5rem, 5vw, 4rem)", paddingRight: "clamp(1.5rem, 5vw, 4rem)", maxWidth: "84rem", margin: "0 auto", width: "100%" }}
         >
           <p
             style={{

@@ -350,7 +350,7 @@ export default function VisibilityAuditModal({ open, onClose }: VisibilityAuditM
           <div className="vam__step-content" key="step1">
             <StepIndicator />
             <div className="vam__label">Free Visibility Audit</div>
-            <h2 className="vam__title">Let&rsquo;s see where you stand.</h2>
+            <h2 className="vam__title">How visible is your business?</h2>
             <p className="vam__subtitle">
               Tell us who you are and where to find you online.
               We&rsquo;ll audit how visible your business is across search, AI, and social.
@@ -364,7 +364,7 @@ export default function VisibilityAuditModal({ open, onClose }: VisibilityAuditM
                   id="vam-first-name"
                   className={`vam__input ${fieldError("firstName", stepOneErrors) ? "vam__input--error" : ""}`}
                   type="text"
-                  placeholder="James"
+                  placeholder="First name"
                   autoComplete="given-name"
                   maxLength={50}
                   value={stepOne.firstName}

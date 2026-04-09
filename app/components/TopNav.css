@@ -30,9 +30,9 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  max-width: 72rem;
+  max-width: 84rem;
   margin: 0 auto;
-  padding: 1rem 2rem;
+  padding: 1rem clamp(1.5rem, 5vw, 4rem);
 }
 
 /* ── Logo (keystone + ENGENIUM) ── */
@@ -149,6 +149,7 @@
   display: none;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
   gap: 5px;
   width: 28px;
   height: 28px;
@@ -161,18 +162,18 @@
 
 .tn__hamburger-line {
   display: block;
-  width: 100%;
-  height: 1.5px;
+  width: 22px;
+  height: 2px;
   background: var(--warm-linen, #F5EFE0);
   opacity: 0.6;
-  border-radius: 1px;
+  border-radius: 0;
   transition: all 0.3s ease;
   transform-origin: center;
 }
 
 /* Animate to X */
 .tn__hamburger--open .tn__hamburger-line:nth-child(1) {
-  transform: translateY(6.5px) rotate(45deg);
+  transform: translateY(7px) rotate(45deg);
   opacity: 0.9;
 }
 .tn__hamburger--open .tn__hamburger-line:nth-child(2) {
@@ -180,7 +181,7 @@
   transform: scaleX(0);
 }
 .tn__hamburger--open .tn__hamburger-line:nth-child(3) {
-  transform: translateY(-6.5px) rotate(-45deg);
+  transform: translateY(-7px) rotate(-45deg);
   opacity: 0.9;
 }
 
@@ -241,6 +242,6 @@
 /* Large desktop: breathe */
 @media (min-width: 1200px) {
   .tn__inner {
-    padding: 1.15rem 2.5rem;
+    padding: 1.15rem clamp(1.5rem, 5vw, 4rem);
   }
 }

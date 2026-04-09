@@ -29,10 +29,12 @@ html, body {
 }
 
 /* Hide scrollbar but keep scrollable */
-.scroll-container::-webkit-scrollbar {
+.scroll-container::-webkit-scrollbar,
+.no-scrollbar::-webkit-scrollbar {
   display: none;
 }
-.scroll-container {
+.scroll-container,
+.no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
@@ -785,6 +787,13 @@ html, body {
   transition: opacity 0.7s ease 0.4s, transform 0.7s ease 0.4s;
 }
 
+.ab-value {
+  background: rgba(23, 18, 16, 0.45);
+  border: 1px solid rgba(245, 239, 224, 0.12);
+  border-radius: 8px;
+  padding: 1.25rem 1.5rem;
+}
+
 .ab-value-title {
   font-family: var(--font-cormorant), serif;
   font-weight: 600;
@@ -799,7 +808,7 @@ html, body {
   font-weight: 300;
   font-size: clamp(0.75rem, 1.2vw, 0.85rem);
   line-height: 1.6;
-  color: rgba(245, 239, 224, 0.4);
+  color: rgba(245, 239, 224, 0.55);
   max-width: 260px;
 }
 

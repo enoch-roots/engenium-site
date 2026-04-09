@@ -9,6 +9,7 @@ import {
   IconStrategy,
   IconImmersive,
 } from "./ServiceIcons";
+import BorderGlow from "./BorderGlow";
 import "./ServiceHub.css";
 
 /* ── Node data (matches MagicBento card order) ── */
@@ -86,112 +87,138 @@ const ServiceHub = ({ onNodeClick }: ServiceHubProps) => {
           </p>
         </div>
 
-        <div className="sh-legend">
-          <p className="sh-legend-heading anim-fade-up-d1">The Ecosystem</p>
+        <BorderGlow
+          className="sh-legend-wrapper"
+          backgroundColor="#0c0a08"
+          borderRadius={20}
+          glowRadius={30}
+          glowIntensity={0.8}
+          glowColor="160 24 40"
+          edgeSensitivity={30}
+          coneSpread={25}
+          colors={["#507E78", "#A86040", "#507E78"]}
+          fillOpacity={0.3}
+        >
+          <div className="sh-legend">
+            <p className="sh-legend-heading anim-fade-up-d1">The Ecosystem</p>
 
-          {nodes.map((node, i) => {
-            const Icon = node.icon;
-            const isActive = hoveredNode === node.id;
-            return (
-              <div
-                key={node.id}
-                className={`sh-legend-item ${isActive ? "sh-legend-item--active" : ""}`}
-                onMouseEnter={() => setHoveredNode(node.id)}
-                onMouseLeave={() => setHoveredNode(null)}
-                onClick={() => onNodeClick?.(node.id, i)}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    onNodeClick?.(node.id, i);
-                  }
-                }}
-              >
-                <div className="sh-legend-icon">
-                  <Icon size={24} />
-                </div>
-                <div className="sh-legend-text">
-                  <span className="sh-legend-title">{node.title}</span>
-                  <span className="sh-legend-desc">{node.shortDesc}</span>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* ── Right column: SVG diagram ── */}
-      <div className="sh-right">
-        <div className="sh-svg-wrap">
-          <svg
-            viewBox={`0 0 ${svgSize} ${svgSize}`}
-            className="sh-svg"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            {/* Connecting lines */}
-            {positioned.map((node, i) => (
-              <line
-                key={`line-${node.id}`}
-                className={`sh-line ${hoveredNode === node.id ? "sh-line--active" : ""}`}
-                x1={cx} y1={cy} x2={node.x} y2={node.y}
-                style={{ animationDelay: `${0.2 + i * 0.1}s` }}
-              />
-            ))}
-
-            {/* Orbit ring */}
-            <circle className="sh-orbit" cx={cx} cy={cy} r={orbitR} />
-
-            {/* Center hub */}
-            <g className="sh-hub">
-              <circle cx={cx} cy={cy} r={hubOuterR} fill="none" stroke="#507E78" strokeWidth="0.75" opacity="0.15" />
-              <circle cx={cx} cy={cy} r={hubR} fill="rgba(12,10,8,0.92)" stroke="#507E78" strokeWidth="1.5" opacity="0.6" />
-              <text x={cx} y={cy - 4} textAnchor="middle" className="sh-hub-label">Your Digital</text>
-              <text x={cx} y={cy + 16} textAnchor="middle" className="sh-hub-label">Infrastructure</text>
-            </g>
-
-            {/* Service nodes */}
-            {positioned.map((node, i) => {
+            {nodes.map((node, i) => {
               const Icon = node.icon;
-              const isHovered = hoveredNode === node.id;
-              const textY = node.y + nodeR + 26;
-
+              const isActive = hoveredNode === node.id;
               return (
-                <g
+                <div
                   key={node.id}
-                  className={`sh-node ${isHovered ? "sh-node--active" : ""}`}
-                  style={{ animationDelay: `${0.5 + i * 0.08}s` }}
+                  className={`sh-legend-item ${isActive ? "sh-legend-item--active" : ""}`}
                   onMouseEnter={() => setHoveredNode(node.id)}
                   onMouseLeave={() => setHoveredNode(null)}
                   onClick={() => onNodeClick?.(node.id, i)}
                   role="button"
                   tabIndex={0}
-                  aria-label={`${node.title} — ${node.label}`}
                   onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onNodeClick?.(node.id, i); }
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      onNodeClick?.(node.id, i);
+                    }
                   }}
                 >
-                  <circle cx={node.x} cy={node.y} r={nodeR + 8} className="sh-node-glow" />
-                  <circle cx={node.x} cy={node.y} r={nodeR} className="sh-node-bg" />
-
-                  <foreignObject x={node.x - iconSize / 2} y={node.y - iconSize / 2} width={iconSize} height={iconSize}>
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "100%", height: "100%" }}>
-                      <Icon size={iconSize} />
-                    </div>
-                  </foreignObject>
-
-                  <text x={node.x} y={textY} textAnchor="middle" className="sh-node-label" style={{ animationDelay: `${0.8 + i * 0.08}s` }}>
-                    {node.label}
-                  </text>
-                  <text x={node.x} y={textY + 22} textAnchor="middle" className="sh-node-title" style={{ animationDelay: `${0.85 + i * 0.08}s` }}>
-                    {node.title}
-                  </text>
-                </g>
+                  <div className="sh-legend-icon">
+                    <Icon size={24} />
+                  </div>
+                  <div className="sh-legend-text">
+                    <span className="sh-legend-title">{node.title}</span>
+                    <span className="sh-legend-desc">{node.shortDesc}</span>
+                  </div>
+                </div>
               );
             })}
-          </svg>
-        </div>
+          </div>
+        </BorderGlow>
       </div>
+
+      {/* ── Right column: SVG diagram ── */}
+      <BorderGlow
+        className="sh-right-wrapper"
+        backgroundColor="#0c0a08"
+        borderRadius={24}
+        glowRadius={30}
+        glowIntensity={0.8}
+        glowColor="160 24 40"
+        edgeSensitivity={30}
+        coneSpread={25}
+        colors={["#507E78", "#A86040", "#507E78"]}
+        fillOpacity={0.3}
+      >
+        <div className="sh-right">
+          <div className="sh-svg-wrap">
+            <svg
+              viewBox={`0 0 ${svgSize} ${svgSize}`}
+              className="sh-svg"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              {/* Connecting lines */}
+              {positioned.map((node, i) => (
+                <line
+                  key={`line-${node.id}`}
+                  className={`sh-line ${hoveredNode === node.id ? "sh-line--active" : ""}`}
+                  x1={cx} y1={cy} x2={node.x} y2={node.y}
+                  style={{ animationDelay: `${0.2 + i * 0.1}s` }}
+                />
+              ))}
+
+              {/* Orbit ring */}
+              <circle className="sh-orbit" cx={cx} cy={cy} r={orbitR} />
+
+              {/* Center hub */}
+              <g className="sh-hub">
+                <circle cx={cx} cy={cy} r={hubOuterR} fill="none" stroke="#507E78" strokeWidth="0.75" opacity="0.15" />
+                <circle cx={cx} cy={cy} r={hubR} fill="rgba(12,10,8,0.92)" stroke="#507E78" strokeWidth="1.5" opacity="0.6" />
+                <text x={cx} y={cy - 4} textAnchor="middle" className="sh-hub-label">Your Digital</text>
+                <text x={cx} y={cy + 16} textAnchor="middle" className="sh-hub-label">Infrastructure</text>
+              </g>
+
+              {/* Service nodes */}
+              {positioned.map((node, i) => {
+                const Icon = node.icon;
+                const isHovered = hoveredNode === node.id;
+                const textY = node.y + nodeR + 26;
+
+                return (
+                  <g
+                    key={node.id}
+                    className={`sh-node ${isHovered ? "sh-node--active" : ""}`}
+                    style={{ animationDelay: `${0.5 + i * 0.08}s` }}
+                    onMouseEnter={() => setHoveredNode(node.id)}
+                    onMouseLeave={() => setHoveredNode(null)}
+                    onClick={() => onNodeClick?.(node.id, i)}
+                    role="button"
+                    tabIndex={0}
+                    aria-label={`${node.title} — ${node.label}`}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onNodeClick?.(node.id, i); }
+                    }}
+                  >
+                    <circle cx={node.x} cy={node.y} r={nodeR + 8} className="sh-node-glow" />
+                    <circle cx={node.x} cy={node.y} r={nodeR} className="sh-node-bg" />
+
+                    <foreignObject x={node.x - iconSize / 2} y={node.y - iconSize / 2} width={iconSize} height={iconSize}>
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "100%", height: "100%" }}>
+                        <Icon size={iconSize} />
+                      </div>
+                    </foreignObject>
+
+                    <text x={node.x} y={textY} textAnchor="middle" className="sh-node-label" style={{ animationDelay: `${0.8 + i * 0.08}s` }}>
+                      {node.label}
+                    </text>
+                    <text x={node.x} y={textY + 22} textAnchor="middle" className="sh-node-title" style={{ animationDelay: `${0.85 + i * 0.08}s` }}>
+                      {node.title}
+                    </text>
+                  </g>
+                );
+              })}
+            </svg>
+          </div>
+        </div>
+      </BorderGlow>
     </div>
   );
 };

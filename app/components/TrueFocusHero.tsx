@@ -37,7 +37,10 @@ const EMBER_DRIFT = {
 };
 
 /* ── Segment data ────────────────────────────────────────────── */
-const SEGMENTS = ["built to be found.", "by anything that searches."];
+const SEGMENTS = [
+  "built to be found.",
+  <>in the new <br className="tf-mobile-break" />generation of search.</>,
+];
 
 const ANIMATION_DURATION = 500;
 const PAUSE_BETWEEN = 1800;
@@ -92,140 +95,6 @@ export default function TrueFocusHero({ active = true }: TrueFocusHeroProps) {
       {/* ── Film grain ── */}
       <div className="tf-grain" />
 
-      {/* ── Logo: Classic (desktop) ── */}
-      <div className="tf-logo-layer tf-logo--classic">
-        <div className="tf-logo-wrap">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 280 200"
-            className="tf-logo-svg"
-            aria-label="Engenium Labs"
-          >
-            {/* Keystone symbol */}
-            <g transform="translate(140, 32)">
-              <svg
-                viewBox="0 0 100 100"
-                width="54"
-                height="54"
-                x="-27"
-                y="0"
-                fill="none"
-              >
-                <path
-                  d="M13,17 L87,17 L66,85 L34,85 Z"
-                  stroke="#F5EFE0"
-                  strokeWidth="2.2"
-                  strokeLinejoin="miter"
-                />
-                <path
-                  d="M27,29 L73,29 L58,76 L42,76 Z"
-                  stroke="#F5EFE0"
-                  strokeWidth="0.9"
-                  opacity="0.36"
-                  strokeLinejoin="miter"
-                />
-                <line
-                  x1="50"
-                  y1="17"
-                  x2="50"
-                  y2="29"
-                  stroke="#F5EFE0"
-                  strokeWidth="0.9"
-                  opacity="0.3"
-                />
-              </svg>
-            </g>
-
-            {/* Clay rule */}
-            <line
-              x1="56"
-              y1="100"
-              x2="224"
-              y2="100"
-              stroke="#A86040"
-              strokeWidth="1"
-            />
-
-            {/* ENGENIUM wordmark */}
-            <text
-              x="140"
-              y="138"
-              textAnchor="middle"
-              fontFamily="var(--font-cormorant), Georgia, serif"
-              fontWeight="300"
-              fontSize="25"
-              letterSpacing="0.22em"
-              fill="#F5EFE0"
-            >
-              ENGENIUM
-            </text>
-
-            {/* LABS */}
-            <text
-              x="140"
-              y="162"
-              textAnchor="middle"
-              fontFamily="var(--font-jetbrains), monospace"
-              fontSize="10"
-              letterSpacing="0.46em"
-              fill="#A86040"
-            >
-              LABS
-            </text>
-          </svg>
-        </div>
-      </div>
-
-      {/* ── Logo: Ghost Field (mobile only) ── */}
-      <div className="tf-logo-layer tf-logo--ghost">
-        <div className="tf-logo-wrap">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 280 220"
-            className="tf-logo-svg"
-            aria-label="Engenium Labs"
-          >
-            {/* Ghost keystone — large, behind text */}
-            <g transform="translate(140, 110)" opacity="0.12">
-              <svg viewBox="0 0 100 100" width="230" height="230" x="-115" y="-106" fill="none">
-                <path d="M13,17 L87,17 L66,85 L34,85 Z" stroke="#F5EFE0" strokeWidth="1.8" strokeLinejoin="miter" />
-                <path d="M27,29 L73,29 L58,76 L42,76 Z" stroke="#F5EFE0" strokeWidth="0.8" strokeLinejoin="miter" />
-                <line x1="50" y1="17" x2="50" y2="29" stroke="#F5EFE0" strokeWidth="0.8" />
-              </svg>
-            </g>
-
-            {/* ENGENIUM wordmark — over the ghost */}
-            <text
-              x="140"
-              y="98"
-              textAnchor="middle"
-              fontFamily="var(--font-cormorant), Georgia, serif"
-              fontWeight="300"
-              fontSize="28"
-              letterSpacing="0.22em"
-              fill="#F5EFE0"
-            >
-              ENGENIUM
-            </text>
-
-            {/* Verdigris rule */}
-            <line x1="54" y1="114" x2="226" y2="114" stroke="#507E78" strokeWidth="1" />
-
-            {/* LABS in Verdigris */}
-            <text
-              x="140"
-              y="138"
-              textAnchor="middle"
-              fontFamily="var(--font-jetbrains), monospace"
-              fontSize="10"
-              letterSpacing="0.46em"
-              fill="#507E78"
-            >
-              LABS
-            </text>
-          </svg>
-        </div>
-      </div>
 
       {/* ── Hero content ── */}
       <div className="tf-hero">

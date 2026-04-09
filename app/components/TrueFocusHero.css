@@ -92,6 +92,17 @@
 }
 
 /* ── TrueFocus segments ─────────────────────────────── */
+/* Hide mobile line break on desktop, show on mobile */
+.tf-mobile-break {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .tf-mobile-break {
+    display: block;
+  }
+}
+
 .tf-segments {
   display: flex;
   flex-direction: column;

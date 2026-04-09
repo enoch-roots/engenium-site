@@ -7,24 +7,19 @@
 .sh-section {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 2rem;
+  gap: 1.25rem;
+  width: 100%;
   max-width: 84rem;
   margin: 0 auto;
-  padding: clamp(5rem, 12vh, 8rem) clamp(1.5rem, 5vw, 4rem) clamp(2rem, 5vh, 4rem);
-  align-items: center;
+  padding: clamp(5rem, 12vh, 8rem) clamp(1.5rem, 5vw, 4rem) 1.25rem;
+  align-items: end;
 }
 
 @media (min-width: 960px) {
   .sh-section {
-    grid-template-columns: 0.42fr 0.58fr;
-    gap: clamp(2rem, 4vw, 4rem);
-    padding: clamp(5.5rem, 12vh, 8rem) clamp(2rem, 5vw, 5rem) clamp(2rem, 5vh, 4rem);
-  }
-}
-
-@media (min-width: 1400px) {
-  .sh-section {
-    gap: 5rem;
+    grid-template-columns: 1fr 2fr;
+    gap: 1.25rem;
+    padding: clamp(5.5rem, 12vh, 8rem) clamp(1.5rem, 5vw, 4rem) 1.25rem;
   }
 }
 
@@ -47,16 +42,29 @@
 }
 
 /* ── Translucent card behind legend ── */
+.sh-legend-wrapper {
+  align-self: end;
+}
+
 .sh-legend {
   display: flex;
   flex-direction: column;
   gap: 0;
-  background: rgba(12, 10, 8, 0.45);
-  border: 1px solid rgba(80, 126, 120, 0.1);
-  border-radius: 20px;
+  background: transparent;
+  border-radius: inherit;
   padding: 1.75rem 1.5rem;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  position: relative;
+  overflow: hidden;
+}
+
+.sh-legend::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 0;
+  background: radial-gradient(circle at 0% 100%, rgba(168, 96, 64, 0.18) 0%, transparent 55%);
 }
 
 /* ── Hero text (moved from page-level) ── */
@@ -172,7 +180,7 @@
 
 /* Mobile: hide legend (diagram labels are enough), show on tablet+ */
 @media (max-width: 959px) {
-  .sh-legend {
+  .sh-legend-wrapper {
     display: none;
   }
 }
@@ -182,16 +190,29 @@
    RIGHT COLUMN — SVG Diagram
    ═══════════════════════════════════════ */
 
+.sh-right-wrapper {
+  align-self: end;
+}
+
 .sh-right {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(12, 10, 8, 0.35);
-  border: 1px solid rgba(80, 126, 120, 0.08);
-  border-radius: 24px;
+  background: transparent;
+  border-radius: inherit;
   padding: clamp(1rem, 2vw, 2rem);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+}
+
+.sh-right::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 0;
+  background: radial-gradient(circle at 100% 0%, rgba(168, 96, 64, 0.16) 0%, transparent 55%);
 }
 
 .sh-svg-wrap {

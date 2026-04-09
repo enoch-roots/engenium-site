@@ -1,5 +1,8 @@
 "use client";
 
+import { useState, useCallback, useEffect } from "react";
+import { createPortal } from "react-dom";
+import Image from "next/image";
 import BorderGlow from "./BorderGlow";
 import {
   IconServicePro,
@@ -23,6 +26,7 @@ interface ProfileData {
   soundsLikeYou: string;
   outcomes: string[];
   icon: React.ComponentType<{ size?: number; className?: string }>;
+  illustration: string;
 }
 
 const profileData: ProfileData[] = [
@@ -39,6 +43,7 @@ const profileData: ProfileData[] = [
       "Booking, scheduling, and payment processing in one system",
     ],
     icon: IconServicePro,
+    illustration: "/pantalones.svg",
   },
   {
     title: "The Growing Operator",
@@ -53,6 +58,7 @@ const profileData: ProfileData[] = [
       "A modern web presence that reflects where your business is now, not where it was three years ago",
     ],
     icon: IconGrowingOp,
+    illustration: "/growth.svg",
   },
   {
     title: "The Professional Services Firm",
@@ -67,6 +73,7 @@ const profileData: ProfileData[] = [
       "Review and reputation infrastructure that reinforces the trust you've already earned",
     ],
     icon: IconProfessional,
+    illustration: "/professional.svg",
   },
   {
     title: "Real Estate & Financial Services",
@@ -81,6 +88,7 @@ const profileData: ProfileData[] = [
       "Attribution from first ad click to closed deal, so you know what's working",
     ],
     icon: IconRealEstate,
+    illustration: "/real.svg",
   },
   {
     title: "The Multi-Location Enterprise",
@@ -95,9 +103,10 @@ const profileData: ProfileData[] = [
       "Per-seat user management with standardized workflows that actually get adopted",
     ],
     icon: IconMultiLocation,
+    illustration: "/roboto.svg",
   },
   {
-    title: "The Solopreneur & Personal Brand",
+    title: "The Solopreneur & Personal",
     label: "Creators · Artists · Coaches",
     hook: "You've built something real. Let's make sure the internet knows it.",
     soundsLikeYou:
@@ -109,6 +118,7 @@ const profileData: ProfileData[] = [
       "A foundation that scales with you as the personal brand becomes a business",
     ],
     icon: IconSolopreneur,
+    illustration: "/solo.svg",
   },
 ];
 
@@ -146,103 +156,237 @@ const watchingData: WatchingData[] = [
   },
 ];
 
+/* ── Props ── */
+export interface ClientProfilesProps {
+  /** Pop-out modal — controlled by parent (lineup/legend clicks) */
+  modalCardIndex?: number | null;
+  onCloseModal?: () => void;
+}
+
 /* ── Component ── */
-const ClientProfiles = () => {
-  return (
-    <div className="cp-container">
-      {/* ── Main profile cards ── */}
-      <div className="cp-grid">
-        {profileData.map((profile, index) => {
-          const Icon = profile.icon;
+const ClientProfiles = ({ modalCardIndex, onCloseModal }: ClientProfilesProps) => {
+  /* Local modal state for bento card clicks */
+  const [localModal, setLocalModal] = useState<number | null>(null);
+  const [portalRoot, setPortalRoot] = useState<HTMLElement | null>(null);
 
-          return (
-            <BorderGlow
-              key={index}
-              className="cp-card-wrapper"
-              backgroundColor="#0c0a08"
-              borderRadius={24}
-              glowRadius={30}
-              glowIntensity={0.8}
-              glowColor="160 24 40"
-              edgeSensitivity={30}
-              coneSpread={25}
-              colors={["#507E78", "#A86040", "#507E78"]}
-              fillOpacity={0.3}
-            >
-              <div className="cp-card cp-card--corner">
-                <div className="cp-card__icon">
-                  <Icon size={48} />
-                </div>
+  useEffect(() => { setPortalRoot(document.body); }, []);
 
-                <div className="cp-card__content">
-                  <div className="cp-card__label">{profile.label}</div>
+  /* Active modal = parent-controlled (lineup) OR local (bento click) */
+  const activeModal = modalCardIndex ?? localModal;
+  const isParentModal = modalCardIndex != null;
 
-                  <h2 className="cp-card__title">{profile.title}</h2>
+  const closeModal = useCallback(() => {
+    if (isParentModal) {
+      onCloseModal?.();
+    } else {
+      setLocalModal(null);
+    }
+  }, [isParentModal, onCloseModal]);
 
-                  <p className="cp-card__hook">{profile.hook}</p>
+  const openCard = useCallback((index: number) => {
+    setLocalModal((prev) => (prev === index ? null : index));
+  }, []);
 
-                  <div className="cp-card__voice">
-                    <span className="cp-card__voice-mark">&ldquo;</span>
-                    {profile.soundsLikeYou}
-                    <span className="cp-card__voice-mark">&rdquo;</span>
-                  </div>
+  /* Close modal on Escape */
+  useEffect(() => {
+    if (activeModal == null) return;
+    const handler = (e: KeyboardEvent) => { if (e.key === "Escape") closeModal(); };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [activeModal, closeModal]);
 
-                  <ul className="cp-card__outcomes">
-                    {profile.outcomes.map((outcome, i) => (
-                      <li key={i}>{outcome}</li>
-                    ))}
-                  </ul>
+  /* Sync: if parent opens modal, clear local */
+  useEffect(() => {
+    if (modalCardIndex != null) setLocalModal(null);
+  }, [modalCardIndex]);
+
+  const modalData = activeModal != null ? profileData[activeModal] : null;
+
+  /* ── Pop-out modal (portaled to body) ── */
+  const popout = modalData && portalRoot ? (() => {
+    const Icon = modalData.icon;
+    return createPortal(
+      <div className="cp-popout-backdrop" onClick={closeModal}>
+        <div
+          className="cp-popout"
+          onClick={(e) => e.stopPropagation()}
+          role="dialog"
+          aria-label={modalData.title}
+        >
+          <button
+            type="button"
+            className="cp-popout__close"
+            onClick={closeModal}
+            aria-label="Close"
+          >
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <line x1="4" y1="4" x2="16" y2="16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+              <line x1="16" y1="4" x2="4" y2="16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+            </svg>
+          </button>
+
+          {/* ── Character + text side by side ── */}
+          <div className="cp-popout__layout">
+            {/* Character illustration */}
+            <div className="cp-popout__illustration" aria-hidden="true">
+              <Image
+                src={modalData.illustration}
+                alt=""
+                width={400}
+                height={400}
+                className="cp-popout__illustration-img"
+              />
+            </div>
+
+            {/* Text content */}
+            <div className="cp-popout__content">
+              <div className="cp-popout__header">
+                <div className="cp-popout__icon"><Icon size={48} /></div>
+                <div>
+                  <div className="cp-popout__label">{modalData.label}</div>
+                  <h2 className="cp-popout__title">{modalData.title}</h2>
                 </div>
               </div>
-            </BorderGlow>
-          );
-        })}
-      </div>
 
-      {/* ── Segments We're Watching ── */}
-      <div className="cp-watching">
-        <div className="cp-watching__header">
-          <div className="cp-watching__label">On Our Radar</div>
-          <h3 className="cp-watching__title">Segments We&rsquo;re Watching</h3>
-          <p className="cp-watching__subtitle">
-            Industries where the Engenium system fits, and where we&rsquo;re
-            building expertise next.
-          </p>
+              <p className="cp-popout__hook">{modalData.hook}</p>
+
+              <div className="cp-popout__voice">
+                <span className="cp-popout__voice-mark">&ldquo;</span>
+                {modalData.soundsLikeYou}
+                <span className="cp-popout__voice-mark">&rdquo;</span>
+              </div>
+
+              <ul className="cp-popout__outcomes">
+                {modalData.outcomes.map((outcome, i) => (
+                  <li key={i}>{outcome}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
         </div>
+      </div>,
+      portalRoot
+    );
+  })() : null;
 
-        <div className="cp-watching__grid">
-          {watchingData.map((segment, index) => {
-            const Icon = segment.icon;
+  return (
+    <>
+      <div className="cp-container">
+        {/* ── Main profile cards ── */}
+        <div className="cp-grid">
+          {profileData.map((profile, index) => {
+            const Icon = profile.icon;
 
             return (
+              <div key={index} id={`persona-card-${index}`}>
               <BorderGlow
-                key={index}
-                className="cp-watching__card-wrapper"
+                className="cp-card-wrapper"
                 backgroundColor="#0c0a08"
-                borderRadius={16}
-                glowRadius={20}
-                glowIntensity={0.5}
+                borderRadius={24}
+                glowRadius={30}
+                glowIntensity={0.8}
                 glowColor="160 24 40"
-                edgeSensitivity={40}
-                coneSpread={30}
+                edgeSensitivity={30}
+                coneSpread={25}
                 colors={["#507E78", "#A86040", "#507E78"]}
-                fillOpacity={0.15}
+                fillOpacity={0.3}
               >
-                <div className="cp-watching__card">
-                  <div className="cp-watching__card-icon">
-                    <Icon size={32} />
+                <div
+                  className="cp-card cp-card--corner cp-card--clickable"
+                  onClick={() => openCard(index)}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      openCard(index);
+                    }
+                  }}
+                >
+                  {/* ── Summary + character ── */}
+                  <div className="cp-card__header">
+                    <div className="cp-card__header-text">
+                      <div className="cp-card__icon">
+                        <Icon size={40} />
+                      </div>
+                      <div className="cp-card__label">{profile.label}</div>
+                      <h2 className="cp-card__title">{profile.title}</h2>
+                      <p className="cp-card__hook">{profile.hook}</p>
+                    </div>
+
+                    {/* ── Transhumans character ── */}
+                    <div className="cp-card__illustration" aria-hidden="true">
+                      <Image
+                        src={profile.illustration}
+                        alt=""
+                        width={320}
+                        height={320}
+                        priority={index < 2}
+                        className="cp-card__illustration-img"
+                      />
+                    </div>
                   </div>
-                  <div className="cp-watching__card-content">
-                    <h4 className="cp-watching__card-title">{segment.title}</h4>
-                    <p className="cp-watching__card-teaser">{segment.teaser}</p>
+
+                  {/* ── "Learn more" hint ── */}
+                  <div className="cp-card__expand-hint">
+                    <span className="cp-card__expand-hint-line" />
+                    <span className="cp-card__expand-hint-text">Learn More</span>
+                    <span className="cp-card__expand-hint-line" />
                   </div>
                 </div>
               </BorderGlow>
+              </div>
             );
           })}
         </div>
+
+        {/* ── Segments We're Watching ── */}
+        <div className="cp-watching">
+          <div className="cp-watching__header">
+            <div className="cp-watching__label">On Our Radar</div>
+            <h3 className="cp-watching__title">Segments We&rsquo;re Watching</h3>
+            <p className="cp-watching__subtitle">
+              Industries where the Engenium system fits, and where we&rsquo;re
+              building expertise next.
+            </p>
+          </div>
+
+          <div className="cp-watching__grid">
+            {watchingData.map((segment, index) => {
+              const Icon = segment.icon;
+
+              return (
+                <BorderGlow
+                  key={index}
+                  className="cp-watching__card-wrapper"
+                  backgroundColor="#0c0a08"
+                  borderRadius={16}
+                  glowRadius={20}
+                  glowIntensity={0.5}
+                  glowColor="160 24 40"
+                  edgeSensitivity={40}
+                  coneSpread={30}
+                  colors={["#507E78", "#A86040", "#507E78"]}
+                  fillOpacity={0.15}
+                >
+                  <div className="cp-watching__card">
+                    <div className="cp-watching__card-icon">
+                      <Icon size={32} />
+                    </div>
+                    <div className="cp-watching__card-content">
+                      <h4 className="cp-watching__card-title">{segment.title}</h4>
+                      <p className="cp-watching__card-teaser">{segment.teaser}</p>
+                    </div>
+                  </div>
+                </BorderGlow>
+              );
+            })}
+          </div>
+        </div>
       </div>
-    </div>
+
+      {popout}
+    </>
   );
 };
 

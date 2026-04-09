@@ -8,6 +8,7 @@ import {
   lazy,
   Suspense,
 } from "react";
+import { useOpenAudit } from "../components/AuditModalContext";
 
 const GradientCanvas = lazy(() => import("./GradientCanvas"));
 
@@ -105,6 +106,7 @@ const SECTIONS = [
 ] as const;
 
 export default function ShowcasePage() {
+  const openAudit = useOpenAudit();
   const scrollRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   /* Only mount ShaderGradient for the active section to avoid
@@ -279,9 +281,38 @@ export default function ShowcasePage() {
                 Your dashboard. Your data. Your domain. We build on
                 infrastructure you own.
               </p>
-              <p className="sc-patina-accent">
-                Built to hand off. Designed to keep.
-              </p>
+              <button
+                type="button"
+                onClick={openAudit}
+                style={{
+                  fontFamily: "var(--font-dm-sans), sans-serif",
+                  fontSize: "clamp(0.85rem, 1.2vw, 0.95rem)",
+                  fontWeight: 400,
+                  letterSpacing: "0.06em",
+                  color: "var(--warm-linen)",
+                  textDecoration: "none",
+                  padding: "0.75rem 2rem",
+                  border: "1px solid rgba(168, 96, 64, 0.7)",
+                  borderRadius: "6px",
+                  background: "rgba(168, 96, 64, 0.25)",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "0.5rem",
+                  cursor: "pointer",
+                  transition: "all 0.3s ease",
+                  marginTop: "1.5rem",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "rgba(168, 96, 64, 0.4)";
+                  e.currentTarget.style.borderColor = "rgba(168, 96, 64, 0.9)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "rgba(168, 96, 64, 0.25)";
+                  e.currentTarget.style.borderColor = "rgba(168, 96, 64, 0.7)";
+                }}
+              >
+                Free Visibility Audit <span>&rarr;</span>
+              </button>
             </div>
           </div>
           <div className="sc-section-label sc-section-label-left">03</div>

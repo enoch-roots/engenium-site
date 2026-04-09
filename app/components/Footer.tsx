@@ -56,7 +56,7 @@ export default function Footer() {
         </Link>
 
         <p className="site-footer__tagline">
-          Built to be found. By everything that searches.
+          Built to be found. In the new generation of search.
         </p>
 
         {/* Copyright */}

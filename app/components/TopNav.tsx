@@ -96,7 +96,7 @@ export default function TopNav({ onAuditClick }: TopNavProps) {
       );
       candidates.forEach((el) => {
         const ov = getComputedStyle(el).overflowY;
-        if (ov === "auto" || ov === "scroll") found.push(el);
+        if (ov === "auto" || ov === "scroll" || ov === "overlay") found.push(el);
       });
       return found;
     };

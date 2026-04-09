@@ -7,10 +7,11 @@
 .mb-services {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-  max-width: 64rem;
+  gap: 1.25rem;
+  width: 100%;
+  max-width: 84rem;
   margin: 0 auto;
-  padding: 0 1.5rem;
+  padding: 0 clamp(1.5rem, 5vw, 4rem);
 }
 
 /* ── Card wrapper ── */
@@ -20,23 +21,18 @@
   transition: box-shadow 0.4s ease;
 }
 
-/* ── Two-column grid on desktop ── */
-@media (min-width: 768px) {
+/* ── 2-col grid on tablet ── */
+@media (min-width: 640px) {
   .mb-services {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 1.25rem;
-    padding: 0 2rem;
-  }
-  .mb-card-wrapper--featured {
-    grid-column: 1 / -1;
   }
 }
 
-@media (min-width: 1200px) {
+/* ── 3-col grid on desktop (3×2 to match persona grid) ── */
+@media (min-width: 1024px) {
   .mb-services {
-    gap: 1.5rem;
-    padding: 0 2.5rem;
+    grid-template-columns: 1fr 1fr 1fr;
   }
 }
 
@@ -47,15 +43,13 @@
   position: relative;
   width: 100%;
   height: 100%;
-  padding: 2.5rem;
+  padding: 2rem 2.5rem;
   border-radius: inherit;
-  background: transparent;
+  background: rgba(12, 10, 8, 0.75);
   font-weight: 300;
 }
 
-.mb-card--featured {
-  padding: 3rem 3.5rem;
-}
+/* featured cards now share the same size in 3×2 grid */
 
 /* ── Clickable card ── */
 .mb-card--clickable {
@@ -103,65 +97,56 @@
 .mb-card__icon {
   position: relative;
   z-index: 2;
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.75rem;
+  opacity: 0.9;
 }
 
-.mb-card--featured .mb-card__icon {
-  margin-bottom: 2rem;
-}
+/* icon sizing now uniform across all cards */
 
 /* ── Label ── */
 .mb-card__label {
   position: relative;
   z-index: 2;
   font-family: var(--font-jetbrains), monospace;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 400;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--verdigris, #507E78);
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.5rem;
 }
 
-.mb-card--featured .mb-card__label {
-  font-size: 0.85rem;
-}
+/* label sizing now uniform */
 
 /* ── Title ── */
 .mb-card__title {
   position: relative;
   z-index: 2;
-  font-family: var(--font-jetbrains), monospace;
+  font-family: var(--font-cormorant), serif;
   font-weight: 400;
-  font-size: 1.4rem;
-  line-height: 1.2;
-  letter-spacing: -0.02em;
+  font-size: 1.6rem;
+  line-height: 1.15;
   margin: 0 0 0.6rem;
   color: var(--warm-linen, #F5EFE0);
 }
 
-.mb-card--featured .mb-card__title {
-  font-size: 1.75rem;
-}
+/* title sizing now uniform */
 
 /* ── Description ── */
 .mb-card__description {
   position: relative;
   z-index: 2;
   font-family: var(--font-dm-sans), sans-serif;
-  font-size: 0.95rem;
-  font-weight: 400;
-  line-height: 1.6;
-  opacity: 0.7;
+  font-size: 0.92rem;
+  font-weight: 300;
+  line-height: 1.55;
+  opacity: 0.6;
   color: var(--warm-linen, #F5EFE0);
-  margin-bottom: 1.25rem;
-  max-width: 38rem;
+  margin-bottom: 0.75rem;
+  max-width: 34rem;
 }
 
-.mb-card--featured .mb-card__description {
-  font-size: 1.05rem;
-  max-width: 44rem;
-}
+/* description sizing now uniform */
 
 /* ── Highlight ── */
 .mb-card__highlight {
@@ -170,94 +155,26 @@
   font-family: var(--font-cormorant), serif;
   font-style: italic;
   font-weight: 400;
-  font-size: 1rem;
-  line-height: 1.5;
+  font-size: 1.05rem;
+  line-height: 1.45;
   color: var(--aged-clay, #A86040);
-  opacity: 0.75;
-  margin-bottom: 0.5rem;
+  opacity: 0.8;
+  margin-bottom: 0.25rem;
   padding-left: 1rem;
-  border-left: 2px solid rgba(168, 96, 64, 0.25);
+  border-left: 2px solid rgba(168, 96, 64, 0.3);
 }
 
-.mb-card--featured .mb-card__highlight {
-  font-size: 1.1rem;
-}
+/* highlight sizing now uniform */
 
 
-/* ═══════════════════════════════════════
-   ACCORDION — inline expand on card click
-   ═══════════════════════════════════════ */
-
-.mb-card__details {
-  position: relative;
-  z-index: 2;
-  display: grid;
-  grid-template-rows: 0fr;
-  transition: grid-template-rows 0.4s ease;
-  overflow: hidden;
-}
-
-.mb-card__details--open {
-  grid-template-rows: 1fr;
-}
-
-.mb-card__details-inner {
-  min-height: 0;
-  overflow: hidden;
-}
-
-/* ── Bullet list ── */
-.mb-card__bullets {
-  position: relative;
-  z-index: 2;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  padding-top: 1rem;
+/* ── Content wrap (fills available height, pushes hint to bottom) ── */
+.mb-card__content-wrap {
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
+  flex: 1;
 }
 
-.mb-card__bullets li {
-  font-family: var(--font-dm-sans), sans-serif;
-  font-size: 0.88rem;
-  font-weight: 400;
-  line-height: 1.5;
-  color: var(--warm-linen, #F5EFE0);
-  opacity: 0.55;
-  padding-left: 1.25rem;
-  position: relative;
-}
-
-.mb-card__bullets li::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0.55em;
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--verdigris, #507E78);
-  opacity: 0.6;
-}
-
-.mb-card--featured .mb-card__bullets li {
-  font-size: 0.95rem;
-}
-
-.mb-card--featured .mb-card__bullets li::before {
-  background: var(--aged-clay, #A86040);
-  opacity: 0.45;
-}
-
-/* ── Open card glow ── */
-.mb-card-wrapper--open {
-  box-shadow:
-    0 0 25px rgba(168, 96, 64, 0.15),
-    0 0 60px rgba(168, 96, 64, 0.07),
-    inset 0 0 30px rgba(168, 96, 64, 0.04);
-}
+/* (Accordion removed — cards now open modal on click) */
 
 
 /* ── Expand hint ── */
@@ -268,8 +185,8 @@
   align-items: center;
   gap: 0.75rem;
   width: 100%;
-  padding: 0.4rem 0 0;
-  margin-top: 0.25rem;
+  padding: 0.25rem 0 0;
+  margin-top: auto;
 }
 
 .mb-card__expand-hint-line {
@@ -301,26 +218,9 @@
   color: var(--aged-clay, #A86040);
 }
 
-.mb-card--featured .mb-card__expand-hint-text {
-  font-size: 0.65rem;
-}
+/* hint sizing now uniform */
 
-/* ── Featured side-by-side ── */
-@media (min-width: 768px) {
-  .mb-card--featured {
-    flex-direction: row;
-    align-items: flex-start;
-    gap: 3rem;
-  }
-  .mb-card--featured .mb-card__icon {
-    flex-shrink: 0;
-    margin-bottom: 0;
-    padding-top: 0.5rem;
-  }
-  .mb-card--featured .mb-card__content-wrap {
-    flex: 1;
-  }
-}
+/* (Featured side-by-side removed — all cards uniform in 3×2 grid) */
 
 
 /* ═══════════════════════════════════════
@@ -505,16 +405,12 @@
    MOBILE
    ═══════════════════════════════════════ */
 
-@media (max-width: 767px) {
+@media (max-width: 639px) {
   .mb-services {
-    padding: 0 1.25rem;
     gap: 1rem;
   }
   .mb-card {
     padding: 1.5rem 1.35rem;
-  }
-  .mb-card--featured {
-    padding: 1.75rem 1.5rem;
   }
   .mb-card__icon {
     margin-bottom: 1rem;
@@ -525,14 +421,11 @@
   .mb-card__title {
     font-size: 1.1rem;
   }
-  .mb-card--featured .mb-card__title {
-    font-size: 1.25rem;
-  }
   .mb-card__description {
-    font-size: 0.85rem;
+    font-size: 0.82rem;
   }
   .mb-card__highlight {
-    font-size: 0.88rem;
+    font-size: 0.92rem;
   }
 
   /* Pop-out fills more on mobile */
@@ -548,20 +441,12 @@
 }
 
 @media (max-width: 380px) {
-  .mb-services {
-    padding: 0 0.75rem;
-  }
+  /* mb-services padding handled by clamp */
   .mb-card {
     padding: 1.25rem 1.15rem;
   }
-  .mb-card--featured {
-    padding: 1.5rem 1.25rem;
-  }
   .mb-card__title {
     font-size: 1rem;
-  }
-  .mb-card--featured .mb-card__title {
-    font-size: 1.1rem;
   }
   .mb-card__description {
     font-size: 0.82rem;

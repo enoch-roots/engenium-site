@@ -1,10 +1,15 @@
 "use client";
 
+import { useState, useCallback } from "react";
 import dynamic from "next/dynamic";
 import { useOpenAudit } from "../components/AuditModalContext";
 import Footer from "../components/Footer";
 
 const ColorBends = dynamic(() => import("../components/ColorBends"), {
+  ssr: false,
+});
+
+const PersonaLineup = dynamic(() => import("../components/PersonaLineup"), {
   ssr: false,
 });
 
@@ -14,9 +19,16 @@ const ClientProfiles = dynamic(() => import("../components/ClientProfiles"), {
 
 export default function WhoWeWorkWithPage() {
   const openAudit = useOpenAudit();
+  const [modalCardIndex, setModalCardIndex] = useState<number | null>(null);
+
+  /* Lineup click → open pop-out modal */
+  const handlePersonaClick = useCallback((index: number) => {
+    setModalCardIndex((prev) => (prev === index ? null : index));
+  }, []);
+
   return (
     <div
-      className="relative w-full bg-[#0c0a08]"
+      className="relative w-full bg-[#0c0a08] no-scrollbar"
       style={{ minHeight: "100vh", overflowY: "auto", height: "100vh" }}
     >
       {/* ── ColorBends background (fixed, fills viewport) ── */}
@@ -48,75 +60,22 @@ export default function WhoWeWorkWithPage() {
       />
 
       {/* ── Page content (scrollable) ── */}
-      <div className="relative z-10">
-        {/* Hero */}
-        <div
-          className="flex flex-col items-center justify-center text-center"
-          style={{
-            paddingTop: "clamp(5.5rem, 12vh, 8rem)",
-            paddingBottom: "clamp(2rem, 4vh, 3rem)",
-            paddingLeft: "clamp(2.5rem, 8vw, 6rem)",
-            paddingRight: "clamp(2.5rem, 8vw, 6rem)",
-          }}
-        >
-          <h1
-            className="anim-fade-up"
-            style={{
-              fontFamily: "var(--font-cormorant), serif",
-              fontWeight: 300,
-              fontSize: "clamp(2.8rem, 7vw, 5.5rem)",
-              lineHeight: 0.95,
-              letterSpacing: "-0.01em",
-              color: "var(--warm-linen)",
-              marginBottom: "1rem",
-            }}
-          >
-            Who We Work With
-          </h1>
+      <div className="relative z-10" style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+        {/* ── Hero + Character Lineup (two-column on desktop) ── */}
+        <PersonaLineup onPersonaClick={handlePersonaClick} />
 
-          <p
-            className="max-w-2xl anim-fade-up-d1"
-            style={{
-              fontFamily: "var(--font-dm-sans), sans-serif",
-              fontWeight: 300,
-              fontSize: "clamp(0.9rem, 1.5vw, 1.1rem)",
-              color: "var(--verdigris)",
-              letterSpacing: "0.06em",
-              lineHeight: 1.6,
-              marginBottom: "0.5rem",
-            }}
-          >
-            We build for businesses ready to be found: by customers,
-            by search engines, and by the AI that&rsquo;s answering
-            questions your customers ask.
-          </p>
-
-          <p
-            className="max-w-xl anim-fade-up-d2"
-            style={{
-              fontFamily: "var(--font-dm-sans), sans-serif",
-              fontWeight: 300,
-              fontSize: "clamp(0.78rem, 1.2vw, 0.92rem)",
-              color: "var(--warm-linen)",
-              opacity: 0.35,
-              letterSpacing: "0.04em",
-              lineHeight: 1.6,
-            }}
-          >
-            From solo operators to multi-location enterprises.
-            If it sounds like you, we should talk.
-          </p>
+        {/* ── Profile cards (accordion) ── */}
+        <div className="anim-fade-up-d2" style={{ paddingBottom: "clamp(3rem, 6vh, 5rem)" }}>
+          <ClientProfiles
+            modalCardIndex={modalCardIndex}
+            onCloseModal={() => setModalCardIndex(null)}
+          />
         </div>
 
-        {/* Profile cards + Watching segments */}
-        <div className="anim-fade-up-d3" style={{ paddingBottom: "clamp(3rem, 6vh, 5rem)" }}>
-          <ClientProfiles />
-        </div>
-
-        {/* CTA */}
+        {/* ── CTA ── */}
         <div
-          className="flex flex-col items-center text-center anim-fade-up-d4"
-          style={{ paddingBottom: "clamp(5rem, 12vh, 8rem)", paddingLeft: "clamp(2.5rem, 8vw, 6rem)", paddingRight: "clamp(2.5rem, 8vw, 6rem)" }}
+          className="flex flex-col items-center text-center anim-fade-up-d3"
+          style={{ paddingBottom: "clamp(5rem, 12vh, 8rem)", paddingLeft: "clamp(1.5rem, 5vw, 4rem)", paddingRight: "clamp(1.5rem, 5vw, 4rem)", maxWidth: "84rem", margin: "0 auto", width: "100%" }}
         >
           <p
             style={{

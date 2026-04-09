@@ -133,30 +133,43 @@ export interface MagicBentoProps {
 }
 
 const MagicBento = ({ modalCardId, onCloseModal }: MagicBentoProps) => {
-  /* Inline accordion — local state, independent of modal */
-  const [expandedCard, setExpandedCard] = useState<string | null>(null);
+  /* Local modal state for bento card clicks */
+  const [localModal, setLocalModal] = useState<string | null>(null);
   const popRef = useRef<HTMLDivElement>(null);
   const [portalRoot, setPortalRoot] = useState<HTMLElement | null>(null);
 
   useEffect(() => { setPortalRoot(document.body); }, []);
 
-  const toggleExpand = useCallback((id: string) => {
-    setExpandedCard((prev) => (prev === id ? null : id));
-  }, []);
+  /* Active modal = parent-controlled (hub) OR local (bento click) */
+  const activeModal = modalCardId ?? localModal;
+  const isParentModal = modalCardId != null;
 
   const closeModal = useCallback(() => {
-    onCloseModal?.();
-  }, [onCloseModal]);
+    if (isParentModal) {
+      onCloseModal?.();
+    } else {
+      setLocalModal(null);
+    }
+  }, [isParentModal, onCloseModal]);
+
+  const openCard = useCallback((id: string) => {
+    setLocalModal((prev) => (prev === id ? null : id));
+  }, []);
 
   /* Close modal on Escape */
   useEffect(() => {
-    if (!modalCardId) return;
+    if (!activeModal) return;
     const handler = (e: KeyboardEvent) => { if (e.key === "Escape") closeModal(); };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [modalCardId, closeModal]);
+  }, [activeModal, closeModal]);
 
-  const modalData = modalCardId ? cardData.find((c) => c.id === modalCardId) : null;
+  /* Sync: if parent opens modal, clear local */
+  useEffect(() => {
+    if (modalCardId != null) setLocalModal(null);
+  }, [modalCardId]);
+
+  const modalData = activeModal ? cardData.find((c) => c.id === activeModal) : null;
 
   /* ── Pop-out modal (portaled to body) ── */
   const popout = modalData && portalRoot ? (() => {
@@ -213,13 +226,11 @@ const MagicBento = ({ modalCardId, onCloseModal }: MagicBentoProps) => {
       <div className="mb-services">
         {cardData.map((card, index) => {
           const Icon = card.icon;
-          const isExpanded = expandedCard === card.id;
           const cardClass = [
             "mb-card",
             "mb-card--corner",
             "mb-card--clickable",
             card.featured && "mb-card--featured",
-            isExpanded && "mb-card--open",
           ]
             .filter(Boolean)
             .join(" ");
@@ -227,7 +238,7 @@ const MagicBento = ({ modalCardId, onCloseModal }: MagicBentoProps) => {
           return (
             <BorderGlow
               key={index}
-              className={`mb-card-wrapper ${card.featured ? "mb-card-wrapper--featured" : ""} ${isExpanded ? "mb-card-wrapper--open" : ""}`}
+              className={`mb-card-wrapper ${card.featured ? "mb-card-wrapper--featured" : ""}`}
               backgroundColor="#0c0a08"
               borderRadius={24}
               glowRadius={30}
@@ -241,19 +252,18 @@ const MagicBento = ({ modalCardId, onCloseModal }: MagicBentoProps) => {
               <div
                 className={cardClass}
                 id={`service-${card.id}`}
-                onClick={() => toggleExpand(card.id)}
+                onClick={() => openCard(card.id)}
                 role="button"
                 tabIndex={0}
-                aria-expanded={isExpanded}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" || e.key === " ") {
                     e.preventDefault();
-                    toggleExpand(card.id);
+                    openCard(card.id);
                   }
                 }}
               >
                 <div className="mb-card__icon">
-                  <Icon size={card.featured ? 64 : 48} />
+                  <Icon size={56} />
                 </div>
 
                 <div className="mb-card__content-wrap">
@@ -265,22 +275,9 @@ const MagicBento = ({ modalCardId, onCloseModal }: MagicBentoProps) => {
                     <p className="mb-card__highlight">{card.highlight}</p>
                   )}
 
-                  {/* ── Inline accordion ── */}
-                  <div className={`mb-card__details ${isExpanded ? "mb-card__details--open" : ""}`}>
-                    <div className="mb-card__details-inner">
-                      <ul className="mb-card__bullets">
-                        {card.bullets.map((bullet, i) => (
-                          <li key={i}>{bullet}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-
-                  <div className={`mb-card__expand-hint ${isExpanded ? "mb-card__expand-hint--open" : ""}`}>
+                  <div className="mb-card__expand-hint">
                     <span className="mb-card__expand-hint-line" />
-                    <span className="mb-card__expand-hint-text">
-                      {isExpanded ? "Less" : "Details"}
-                    </span>
+                    <span className="mb-card__expand-hint-text">Learn More</span>
                     <span className="mb-card__expand-hint-line" />
                   </div>
                 </div>

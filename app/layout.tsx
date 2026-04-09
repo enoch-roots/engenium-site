@@ -55,7 +55,7 @@ export const metadata: Metadata = {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Engenium Labs — Built to be found. By everything that searches.",
+        alt: "Engenium Labs — Built to be found. In the new generation of search.",
       },
     ],
   },

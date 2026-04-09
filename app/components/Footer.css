@@ -8,6 +8,8 @@
   position: relative;
   width: 100%;
   padding: 0 clamp(1.5rem, 5vw, 3rem);
+  margin-top: auto;  /* push to bottom of flex parent while content loads */
+  flex-shrink: 0;
 }
 
 /* Thin rule above */
