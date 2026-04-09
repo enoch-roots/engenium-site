@@ -65,7 +65,7 @@ html, body {
   right: 2rem;
   top: 50%;
   transform: translateY(-50%);
-  z-index: 1000;
+  z-index: 990;
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -475,6 +475,14 @@ html, body {
 }
 
 
+/* ── Section 2 mobile: push content up ── */
+@media (max-width: 768px) {
+  .sc-content-signal {
+    padding: 0 1.5rem calc(20vh + env(safe-area-inset-bottom, 0px)) 1.5rem;
+    max-width: 100%;
+  }
+}
+
 /* ═══════════════════════════════════════
    SECTION 3 — PATINA WASH — THE PARTNERSHIP
    Lower-left, on the dark anchor. Minimal,
@@ -559,6 +567,13 @@ html, body {
 
 .sc-active .sc-content-patina .sc-label {
   opacity: 0.55;
+}
+
+/* ── Section 3 mobile: push content up ── */
+@media (max-width: 768px) {
+  .sc-content-patina {
+    padding: 0 1.5rem calc(20vh + env(safe-area-inset-bottom, 0px)) 1.5rem;
+  }
 }
 
 
@@ -847,7 +862,7 @@ html, body {
     gap: 1.25rem;
   }
   .ab-content-values {
-    padding: 0 2rem 8vh 2rem;
+    padding: 0 2rem calc(20vh + env(safe-area-inset-bottom, 0px)) 2rem;
   }
 }
 
@@ -923,7 +938,7 @@ html, body {
 
 @media (max-width: 640px) {
   .ab-content-austin {
-    padding: 0 2rem 8vh 2rem;
+    padding: 0 2rem calc(20vh + env(safe-area-inset-bottom, 0px)) 2rem;
   }
 }
 
