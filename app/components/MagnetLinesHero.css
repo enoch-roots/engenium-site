@@ -32,9 +32,7 @@
   }
 
   .ml-body {
-    font-size: 0.95rem !important;
-    max-width: 34ch !important;
-    text-align: center;
+    display: none;
   }
 
   /* ── Capability tags: tighter, smaller pills ── */

@@ -451,7 +451,7 @@ export default function GradientBlindsHero({
         <h1
           style={styles.headline}
           dangerouslySetInnerHTML={{
-            __html: `Most businesses aren't in AI answers <span style="color:#507E78">yet.</span><br><em style="font-style:italic;color:#A86040">That's a window.</em>`,
+            __html: `Search just <span style="color:#FFFFFF">changed.</span><br><em style="font-style:italic;color:#A86040">Most businesses haven't.</em>`,
           }}
         />
         <p style={styles.subline}>

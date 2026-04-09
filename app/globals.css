@@ -1067,6 +1067,13 @@ html, body {
   animation: cubeCardGlow 6s ease-in-out infinite;
 }
 
+/* Hide 2nd dot on mobile */
+@media (max-width: 1024px) {
+  .cb-dot-2 {
+    display: none;
+  }
+}
+
 
 /* ═══════════════════════════════════════
    PAGE ENTRANCE ANIMATIONS

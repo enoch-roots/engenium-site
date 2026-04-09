@@ -626,7 +626,7 @@ export default function CubesHero({ active = true }: CubesHeroProps) {
       {/* Card overlay */}
       <div className="cube-card-glow" style={styles.card}>
         <div style={styles.eyebrow}>
-          Full-stack · integrated · engineered
+          Full-stack · integrated<span className="cb-dot-2"> ·</span> engineered
         </div>
         <h1 style={styles.headline}>
           In the{" "}

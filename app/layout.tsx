@@ -31,6 +31,7 @@ const SITE_URL = "https://engeniumlabs.com";
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
+  viewportFit: "cover",
   themeColor: "#0c0a08",
 };
 
@@ -41,15 +42,15 @@ export const metadata: Metadata = {
     template: "%s | Engenium Labs",
   },
   description:
-    "Strategy, systems, and digital infrastructure engineered to compound. Built to be found — in the new generation of search.",
+    "Strategy, systems, and digital infrastructure engineered to compound. Built to be found — in the generation of AI search.",
   openGraph: {
     type: "website",
     locale: "en_US",
     url: SITE_URL,
     siteName: "Engenium Labs",
-    title: "Engenium Labs — Built to Be Found. In the New Generation of Search.",
+    title: "Engenium Labs — Built to Be Found. In the Generation of AI Search.",
     description:
-      "Strategy, systems, and digital infrastructure engineered to compound. Built to be found — in the new generation of search.",
+      "Strategy, systems, and digital infrastructure engineered to compound. Built to be found — in the generation of AI search.",
     images: [
       {
         url: "/og-image.png",
@@ -61,9 +62,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Engenium Labs — Built to Be Found. In the New Generation of Search.",
+    title: "Engenium Labs — Built to Be Found. In the Generation of AI Search.",
     description:
-      "Strategy, systems, and digital infrastructure engineered to compound. Built to be found — in the new generation of search.",
+      "Strategy, systems, and digital infrastructure engineered to compound. Built to be found — in the generation of AI search.",
     images: ["/og-image.png"],
   },
   robots: {
