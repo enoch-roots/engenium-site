@@ -862,7 +862,7 @@ html, body {
     gap: 1.25rem;
   }
   .ab-content-values {
-    padding: 0 2rem calc(20vh + env(safe-area-inset-bottom, 0px)) 2rem;
+    padding: 0 2rem calc(14vh + env(safe-area-inset-bottom, 0px)) 2rem;
   }
 }
 
