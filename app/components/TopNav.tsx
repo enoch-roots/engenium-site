@@ -54,8 +54,8 @@ interface NavLink {
 }
 
 const NAV_LINKS: NavLink[] = [
-  { href: "/services", label: "What We Build" },
   { href: "/who-we-work-with", label: "Who We Work With" },
+  { href: "/services", label: "What We Build" },
   { href: "/how-we-work", label: "How We Work" },
   { href: "/about", label: "About" },
 ];
@@ -63,8 +63,8 @@ const NAV_LINKS: NavLink[] = [
 /* ── Staggered menu items (mobile) ── */
 const MENU_ITEMS = [
   { label: "Home", ariaLabel: "Go to home page", href: "/" },
-  { label: "What We Build", ariaLabel: "View our services", href: "/services" },
   { label: "Who We Work With", ariaLabel: "See who we work with", href: "/who-we-work-with" },
+  { label: "What We Build", ariaLabel: "View our services", href: "/services" },
   { label: "How We Work", ariaLabel: "Learn our process", href: "/how-we-work" },
   { label: "About", ariaLabel: "Learn about Engenium Labs", href: "/about" },
 ];
