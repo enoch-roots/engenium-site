@@ -42,8 +42,8 @@ const SEGMENTS = [
   <>In the generation <br className="tf-mobile-break" />of AI search.</>,
 ];
 
-const ANIMATION_DURATION = 900;
-const PAUSE_BETWEEN = 3000;
+const ANIMATION_DURATION = 500;
+const PAUSE_BETWEEN = 1800;
 
 interface TrueFocusHeroProps {
   /** Only mount the WebGL canvas when the section is active/visible */
@@ -67,7 +67,7 @@ export default function TrueFocusHero({ active = true }: TrueFocusHeroProps) {
     if (!active) return;
     const init = setTimeout(() => {
       cycle();
-    }, 1000);
+    }, 600);
     return () => clearTimeout(init);
   }, [cycle, active]);
 
@@ -125,7 +125,7 @@ export default function TrueFocusHero({ active = true }: TrueFocusHeroProps) {
                     style={{
                       transform: isFocused ? "scaleY(1)" : "scaleY(0)",
                       opacity: isFocused ? 1 : 0,
-                      transitionDelay: isFocused ? "0.15s" : "0s",
+                      transitionDelay: isFocused ? "0.1s" : "0s",
                     }}
                   />
                   <div
@@ -133,7 +133,7 @@ export default function TrueFocusHero({ active = true }: TrueFocusHeroProps) {
                     style={{
                       transform: isFocused ? "scaleX(1)" : "scaleX(0)",
                       opacity: isFocused ? 1 : 0,
-                      transitionDelay: isFocused ? "0.3s" : "0s",
+                      transitionDelay: isFocused ? "0.2s" : "0s",
                     }}
                   />
                   <div
@@ -141,7 +141,7 @@ export default function TrueFocusHero({ active = true }: TrueFocusHeroProps) {
                     style={{
                       transform: isFocused ? "scaleY(1)" : "scaleY(0)",
                       opacity: isFocused ? 1 : 0,
-                      transitionDelay: isFocused ? "0.45s" : "0s",
+                      transitionDelay: isFocused ? "0.3s" : "0s",
                     }}
                   />
                   {(["tl", "tr", "bl", "br"] as const).map((corner) => (
@@ -150,7 +150,7 @@ export default function TrueFocusHero({ active = true }: TrueFocusHeroProps) {
                       className={`tf-corner tf-corner-${corner}`}
                       style={{
                         opacity: isFocused ? 1 : 0,
-                        transitionDelay: isFocused ? "0.55s" : "0s",
+                        transitionDelay: isFocused ? "0.35s" : "0s",
                       }}
                     />
                   ))}
