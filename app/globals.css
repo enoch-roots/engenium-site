@@ -1074,6 +1074,19 @@ html, body {
   }
 }
 
+/* ── Push hero content up on mobile (iPhone safe area) ── */
+@media (max-width: 768px) {
+  /* Hero 2 — GradientBlinds: shift copy overlay up */
+  .gb-copy-overlay {
+    padding-bottom: calc(6rem + env(safe-area-inset-bottom, 0px)) !important;
+  }
+
+  /* Hero 4 — CubesHero: shift card up from center */
+  .cube-card-glow {
+    top: 45% !important;
+  }
+}
+
 
 /* ═══════════════════════════════════════
    PAGE ENTRANCE ANIMATIONS

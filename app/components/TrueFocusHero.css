@@ -294,7 +294,7 @@
   .tf-hero {
     padding: 0 1.5rem;
     padding-top: 0;
-    padding-bottom: calc(2rem + env(safe-area-inset-bottom, 0px));
+    padding-bottom: calc(6rem + env(safe-area-inset-bottom, 0px));
     justify-content: center;
     align-items: center;
     gap: 0;
@@ -324,7 +324,7 @@
   /* ── CTAs: stack vertically, pinned at bottom ── */
   .tf-cta-row {
     position: absolute;
-    bottom: calc(clamp(5rem, 12vh, 7rem) + env(safe-area-inset-bottom, 0px));
+    bottom: calc(clamp(7rem, 16vh, 9rem) + env(safe-area-inset-bottom, 0px));
     left: 1.5rem;
     right: 1.5rem;
     margin-top: 0;

@@ -13,7 +13,7 @@
   .ml-hero {
     grid-template-columns: 1fr !important;
     gap: 2rem !important;
-    padding: 5rem 1.5rem 6rem !important;
+    padding: 5rem 1.5rem calc(8rem + env(safe-area-inset-bottom, 0px)) !important;
     min-height: 100vh !important;
     align-content: center !important;
   }
@@ -99,7 +99,7 @@
 @media (max-width: 480px) {
 
   .ml-hero {
-    padding: 4rem 1.25rem 5rem !important;
+    padding: 4rem 1.25rem calc(7rem + env(safe-area-inset-bottom, 0px)) !important;
   }
 
   .ml-headline {

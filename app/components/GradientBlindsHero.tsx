@@ -446,7 +446,7 @@ export default function GradientBlindsHero({
       <div style={styles.grain} />
 
       {/* Copy overlay */}
-      <div style={styles.copyOverlay}>
+      <div className="gb-copy-overlay" style={styles.copyOverlay}>
         <div style={styles.eyebrow}>The Window Is Open</div>
         <h1
           style={styles.headline}

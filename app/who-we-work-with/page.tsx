@@ -29,7 +29,7 @@ export default function WhoWeWorkWithPage() {
   return (
     <div
       className="relative w-full bg-[#0c0a08] no-scrollbar"
-      style={{ minHeight: "100vh", overflowY: "auto", height: "100vh" }}
+      style={{ minHeight: "100vh", overflowY: "auto", overflowX: "hidden", height: "100vh" }}
     >
       {/* ── ColorBends background (fixed, fills viewport) ── */}
       <div className="fixed inset-0 z-0">
