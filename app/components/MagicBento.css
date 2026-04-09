@@ -232,11 +232,12 @@
 .mb-popout-backdrop {
   position: fixed;
   inset: 0;
-  z-index: 900;
+  z-index: 1100;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: clamp(1rem, 4vw, 3rem);
+  overflow-y: auto;
   background: rgba(12, 10, 8, 0.7);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
